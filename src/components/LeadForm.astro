@@ -1,4 +1,5 @@
 ---
+import BookMockup from "./BookMockup.astro";
 // Форма заявки. Отправка: TODO — подключить Telegram-бот или CRM (endpoint в data-endpoint).
 interface Props { title?: string; subtitle?: string; city?: string; source?: string }
 const { title = "Получите расчёт окупаемости для вашего города", subtitle = "Пришлём экономическую модель точки и свяжемся в течение дня. Основатель лично отвечает на заявки.", city = "", source = "page" } = Astro.props;
@@ -10,11 +11,7 @@ const id = "f" + Math.random().toString(36).slice(2, 7);
       <span class="eyebrow">Заявка</span>
       <h2>{title}</h2>
       <p class="muted">{subtitle}</p>
-      <ul class="checks">
-        <li>Смета запуска и помесячный план выхода на прибыль</li>
-        <li>Проверим, свободен ли ваш город</li>
-        <li>Без обязательств: франшизу продаём только после отбора</li>
-      </ul>
+      <BookMockup />
     </div>
     <form class="form" data-endpoint="" data-source={source} novalidate>
       <label for={id + "n"}>Как к вам обращаться</label>
@@ -23,9 +20,10 @@ const id = "f" + Math.random().toString(36).slice(2, 7);
       <input id={id + "p"} name="contact" required placeholder="+7 900 000-00-00 или @username" />
       <label for={id + "c"}>Город, где хотите открыться</label>
       <input id={id + "c"} name="city" value={city} placeholder="Например, Краснодар" />
-      <button class="btn" type="submit">Получить расчёт</button>
+      <button class="btn" type="submit">Получить модель для моего города</button>
       <p class="ok" hidden>Заявка принята. Мы свяжемся с вами в течение дня.</p>
       <p class="err" hidden>Заполните имя и контакт, чтобы мы могли прислать расчёт.</p>
+      <ul class="checks sm"><li>Смета и помесячный план выхода на прибыль</li><li>Проверим, свободен ли ваш город</li><li>Без обязательств</li></ul>
       <small class="muted">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</small>
     </form>
   </div>
@@ -55,5 +53,7 @@ const id = "f" + Math.random().toString(36).slice(2, 7);
   .form .btn{margin-top:14px}
   .ok{color:var(--ok);font-weight:700}.err{color:var(--red);font-weight:600}
   small{font-size:12px}
+  .checks.sm{font-size:13px;gap:6px;margin-top:10px;color:var(--ink)}
+  .lead{align-items:center}
   @media (max-width:860px){.lead{grid-template-columns:1fr}}
 </style>

@@ -1,0 +1,166 @@
+---
+// Макет лид-магнита «Экономическая модель точки» в виде раскрытой книги. Цифры — пример на показателях сети
+// (чек 750 ₽, продукты 35%, упаковка 60 ₽, курьер 150 ₽ на 2 дня, постоянные 210 000 ₽, выход на 44 клиента за 8 мес.).
+import { BUDGET } from "../data/facts";
+const total = BUDGET.reduce((s, b) => s + b.sum, 0);
+const k = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
+const perClient = 30 * (750 * 0.65 - 60 - 75), fixed = 210000;
+const months = Array.from({ length: 12 }, (_, i) => { const c = Math.round(44 * Math.min(1, (i + 1) / 8)); return { m: i + 1, c, p: c * perClient - fixed }; });
+const maxC = 44, maxP = Math.max(...months.map((x) => x.p)), minP = Math.min(...months.map((x) => x.p));
+const firstPos = months.find((x) => x.p > 0)?.m ?? 12;
+const cost = [["Продукты", 263], ["Упаковка", 60], ["Доставка", 75], ["Маржа", 352]] as const;
+---
+<div class="book-wrap" data-book>
+  <div class="tabs" role="tablist" aria-label="Разделы модели">
+    <button type="button" role="tab" aria-selected="true" data-go="0">Обложка</button>
+    <button type="button" role="tab" aria-selected="false" data-go="1">Смета и выручка</button>
+    <button type="button" role="tab" aria-selected="false" data-go="2">Себестоимость и стратегия</button>
+  </div>
+  <div class="book" aria-label="Пример экономической модели точки Perfect Balance">
+    <div class="spine" aria-hidden="true"></div>
+
+    <div class="spread on">
+      <div class="pg l cover">
+        <img src="/img/logo.svg" alt="" width="104" height="35" />
+        <div class="c-mid"><span class="c-k">Франшиза · 2026</span><h4>Экономическая модель точки</h4><p>Доставка правильного питания по подписке</p></div>
+        <div class="c-bar"><span>Город 150–700 тыс. жителей</span><b>Vol. 01</b></div>
+      </div>
+      <div class="pg r">
+        <span class="pk">Содержание</span>
+        <ol class="toc">
+          {["Смета запуска", "Клиенты и выручка по месяцам", "Себестоимость рациона", "Точка безубыточности", "Стратегия первых 90 дней", "Срок окупаемости"].map((t, i) => <li><span>{t}</span><i></i><b>{String(i * 4 + 3).padStart(2, "0")}</b></li>)}
+        </ol>
+        <div class="stamp">11 мес.<small>окупаемость в примере</small></div>
+      </div>
+    </div>
+
+    <div class="spread">
+      <div class="pg l">
+        <span class="pk">01 · Смета запуска</span>
+        <table>{BUDGET.map((b) => <tr><td>{b.item}</td><td>{k(b.sum)}</td></tr>)}<tr class="tot"><td>Итого</td><td>{k(total)} ₽</td></tr></table>
+      </div>
+      <div class="pg r">
+        <span class="pk">02 · Клиенты и прибыль, мес. 1–12</span>
+        <div class="bars">{months.map((x) => <div class="col"><i class="cl" style={`height:${(x.c / maxC) * 100}%`}></i><span>{x.m}</span></div>)}</div>
+        <div class="legend"><span><i class="cl"></i>клиентов в день</span><span>выход на 44 клиента к 8-му месяцу</span></div>
+        <div class="pline">
+          {months.map((x) => <div class:list={["pb", { neg: x.p < 0 }]} style={`height:${(Math.abs(x.p) / Math.max(maxP, -minP)) * 100}%`}></div>)}
+        </div>
+        <div class="legend"><span><i class="pr"></i>прибыль в месяц</span><span>в плюсе с {firstPos}-го месяца</span></div>
+      </div>
+    </div>
+
+    <div class="spread">
+      <div class="pg l">
+        <span class="pk">03 · Из чего состоит чек 750 ₽ за день</span>
+        <div class="stack">{cost.map(([n, v]) => <div class:list={["seg", { m: n === "Маржа" }]} style={`flex:${v}`}><b>{v} ₽</b><span>{n}</span></div>)}</div>
+        <span class="pk" style="margin-top:14px">04 · Точка безубыточности</span>
+        <div class="be"><b>20</b><span>клиентов в день покрывают все постоянные расходы — 210 000 ₽ в месяц</span></div>
+      </div>
+      <div class="pg r">
+        <span class="pk">05 · Стратегия первых 90 дней</span>
+        <ul class="tl">
+          <li><b>Дни 1–30</b><span>Запуск сайта города, пробные дни, первые блогеры</span></li>
+          <li><b>Дни 31–60</b><span>Яндекс Директ, партнёрства с фитнес-клубами</span></li>
+          <li><b>Дни 61–90</b><span>Удержание, продление подписок, корпоративные заказы</span></li>
+        </ul>
+        <div class="stamp red">06 · 11 мес.<small>срок окупаемости</small></div>
+      </div>
+    </div>
+
+    <div class="flip" aria-hidden="true"></div>
+  </div>
+  <p class="note">Пример на показателях сети. Модель для вашего города — после заявки.</p>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-book]").forEach((w) => {
+    const spreads = [...w.querySelectorAll<HTMLElement>(".spread")], tabs = [...w.querySelectorAll<HTMLButtonElement>("[data-go]")];
+    const flip = w.querySelector<HTMLElement>(".flip")!;
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let cur = 0, timer: number | undefined, busy = false;
+    const go = (n: number) => {
+      if (n === cur || busy) return; busy = true;
+      const back = n < cur;
+      tabs.forEach((t, i) => t.setAttribute("aria-selected", String(i === n)));
+      if (still) { spreads[cur].classList.remove("on"); spreads[n].classList.add("on"); cur = n; busy = false; return; }
+      flip.className = "flip " + (back ? "back" : "fwd");
+      setTimeout(() => { spreads[cur].classList.remove("on"); spreads[n].classList.add("on"); cur = n; }, 380);
+      setTimeout(() => { flip.className = "flip"; busy = false; }, 800);
+    };
+    const auto = () => { clearInterval(timer); if (!still) timer = window.setInterval(() => go((cur + 1) % spreads.length), 4200); };
+    tabs.forEach((t) => t.addEventListener("click", () => { go(Number(t.dataset.go)); auto(); }));
+    w.addEventListener("mouseenter", () => clearInterval(timer));
+    w.addEventListener("mouseleave", auto);
+    auto();
+  });
+</script>
+<style>
+  .book-wrap{display:grid;gap:16px;perspective:1800px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px}
+  .tabs button{font:600 12px var(--f);padding:8px 12px;border:1px solid #333;background:transparent;color:#bdbdbd;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:#fff;color:#111;border-color:#fff}
+  .book{position:relative;aspect-ratio:1.55/1;max-width:100%;transform:rotateX(14deg) rotateZ(-2deg);transform-style:preserve-3d;box-shadow:0 40px 60px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);background:#EDEBE6;transition:transform .5s}
+  .book-wrap:hover .book{transform:rotateX(6deg) rotateZ(0)}
+  .spine{position:absolute;left:50%;top:0;bottom:0;width:36px;margin-left:-18px;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.18) 45%,rgba(0,0,0,.28) 50%,rgba(0,0,0,.18) 55%,rgba(0,0,0,0));z-index:3;pointer-events:none}
+  .spread{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;opacity:0;transition:opacity .25s}
+  .spread.on{opacity:1}
+  .pg{background:#FBFAF7;color:#111;padding:6% 7%;display:flex;flex-direction:column;gap:8px;overflow:hidden;font-size:clamp(8px,1.05vw,12px)}
+  .pg.l{box-shadow:inset -10px 0 18px -12px rgba(0,0,0,.25)}
+  .pg.r{box-shadow:inset 10px 0 18px -12px rgba(0,0,0,.25)}
+  .pk{font-size:.8em;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+  /* обложка */
+  .cover{background:#0B0B0B;color:#fff;justify-content:space-between;position:relative}
+  .cover::after{content:"";position:absolute;right:0;bottom:0;width:60%;height:45%;background:radial-gradient(closest-side,rgba(199,13,0,.55),transparent);pointer-events:none}
+  .cover img{width:34%;height:auto}
+  .c-mid{display:grid;gap:6px;position:relative;z-index:1}
+  .c-k{font-size:.8em;letter-spacing:.14em;text-transform:uppercase;color:#bdbdbd}
+  .cover h4{margin:0;font-size:2.1em;line-height:1.05;font-weight:800}
+  .cover h4::after{content:"";display:block;width:34%;height:.22em;background:var(--red);margin-top:.35em}
+  .cover p{color:#bdbdbd}
+  .c-bar{display:flex;justify-content:space-between;border-top:1px solid #333;padding-top:6px;font-size:.85em;color:#bdbdbd;position:relative;z-index:1}
+  /* содержание */
+  .toc{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:.55em;counter-reset:t}
+  .toc li{display:flex;align-items:baseline;gap:6px;counter-increment:t}
+  .toc li::before{content:counter(t,decimal-leading-zero);font-weight:800;color:var(--red)}
+  .toc i{flex:1;border-bottom:1px dotted #aaa}
+  .stamp{margin-top:auto;align-self:flex-end;border:2px solid #111;padding:.5em .8em;font-weight:800;font-size:1.5em;line-height:1;transform:rotate(-4deg);display:grid;text-align:center}
+  .stamp small{font-size:.45em;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .stamp.red{border-color:var(--red);color:var(--red)}
+  /* таблица */
+  table{width:100%;border-collapse:collapse;font-size:1em}
+  td{padding:.42em 0;border-bottom:1px solid #e3e0da}
+  td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  tr.tot td{border-bottom:0;border-top:2px solid #111;font-weight:800;padding-top:.6em}
+  /* графики */
+  .bars{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end;height:36%}
+  .col{display:grid;grid-template-rows:1fr auto;height:100%;align-items:end;text-align:center;font-size:.75em;color:#888}
+  .col i{display:block;background:#111;min-height:2px}
+  .cl{background:#111}
+  .pline{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:center;height:24%;position:relative;border-top:1px dashed #ccc;margin-top:6px}
+  .pb{background:var(--red);align-self:end}
+  .pb.neg{background:#c9c5bd;align-self:start}
+  .legend{display:flex;justify-content:space-between;gap:8px;font-size:.78em;color:#666}
+  .legend i{display:inline-block;width:.8em;height:.8em;margin-right:4px;vertical-align:middle}
+  .legend i.pr{background:var(--red)}
+  /* себестоимость */
+  .stack{display:flex;height:22%;min-height:40px}
+  .seg{display:grid;align-content:center;justify-items:center;background:#d9d5cd;border-right:2px solid #FBFAF7;font-size:.85em;text-align:center}
+  .seg:nth-child(2){background:#c8c3b9}.seg:nth-child(3){background:#b7b1a6}
+  .seg.m{background:var(--red);color:#fff}
+  .seg span{font-size:.8em}
+  .be{display:flex;gap:10px;align-items:center}
+  .be b{font-size:3em;font-weight:800;line-height:1;color:var(--red)}
+  .tl{list-style:none;margin:0;padding:0 0 0 12px;border-left:2px solid var(--red);display:grid;gap:.8em}
+  .tl li{display:grid;position:relative}
+  .tl li::before{content:"";position:absolute;left:-17px;top:.25em;width:8px;height:8px;background:var(--red);border-radius:50%}
+  .tl span{color:#555}
+  /* перелистывание */
+  .flip{position:absolute;top:0;bottom:0;left:50%;width:50%;transform-origin:left center;background:linear-gradient(90deg,#fff,#EDEBE6);z-index:4;opacity:0;pointer-events:none;backface-visibility:visible}
+  .flip.fwd{animation:turn .8s cubic-bezier(.4,.1,.3,1)}
+  .flip.back{left:0;transform-origin:right center;animation:turnb .8s cubic-bezier(.4,.1,.3,1)}
+  @keyframes turn{0%{opacity:1;transform:rotateY(0)}50%{box-shadow:-30px 0 40px rgba(0,0,0,.25)}100%{opacity:1;transform:rotateY(-180deg)}}
+  @keyframes turnb{0%{opacity:1;transform:rotateY(0)}100%{opacity:1;transform:rotateY(180deg)}}
+  .note{font-size:12px;color:#8f8f8f}
+  @media (max-width:560px){.book{transform:none}.pg{font-size:8.5px;padding:5%}}
+  @media (prefers-reduced-motion:reduce){.book,.book-wrap:hover .book{transform:none;transition:none}}
+</style>
