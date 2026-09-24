@@ -67,25 +67,25 @@ const years = new Date().getFullYear() - FACTS.since;
   }
 </script>
 <style>
-  .hero{position:relative;overflow:hidden;background:var(--black);color:#fff}
+  .hero{position:relative;overflow:hidden;background:var(--black);color:#fff;min-height:calc(100svh - var(--hdr));display:flex;flex-direction:column}
   .bg{position:absolute;inset:0;pointer-events:none}
   .glow{position:absolute;right:-10%;top:-20%;width:70%;height:120%;background:radial-gradient(closest-side,rgba(199,13,0,.38),transparent);filter:blur(20px);animation:breathe 9s ease-in-out infinite alternate}
   .grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(180deg,#000,transparent 85%)}
-  .giant{position:absolute;left:0;bottom:92px;white-space:nowrap;font-weight:800;font-size:clamp(90px,14vw,210px);line-height:.8;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.09);animation:slide 40s linear infinite alternate}
+  .giant{position:absolute;left:0;bottom:clamp(80px,7vw,120px);white-space:nowrap;font-weight:800;font-size:clamp(90px,14vw,210px);line-height:.8;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.09);animation:slide 40s linear infinite alternate}
   @keyframes breathe{to{transform:translate(-6%,6%) scale(1.1)}}
   @keyframes slide{to{transform:translateX(-25%)}}
-  .hero-in{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,3vw,48px);align-items:center;padding-block:clamp(32px,4.5vw,64px) clamp(48px,5vw,80px)}
+  .hero-in{flex:1;width:100%;position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,3vw,48px);align-items:center;padding-block:clamp(28px,3vw,56px)}
   .h-txt{display:grid;gap:20px}
   .badge{display:inline-flex;align-items:center;gap:10px;width:max-content;max-width:100%;font-size:13px;font-weight:600;padding:8px 14px;border:1px solid #333;background:rgba(255,255,255,.04)}
   .dot{width:8px;height:8px;border-radius:50%;background:#2BB36A;box-shadow:0 0 0 0 rgba(43,179,106,.6);animation:pulse 2s infinite}
   @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(43,179,106,0)}100%{box-shadow:0 0 0 0 rgba(43,179,106,0)}}
-  h1{font-size:clamp(32px,3.6vw,52px);letter-spacing:-.01em;max-width:15em}
-  .lead{font-size:clamp(16px,1.4vw,19px);color:#cfcfcf;max-width:52ch}
+  h1{font-size:clamp(34px,min(3.5vw,6.2svh),68px);letter-spacing:-.01em;max-width:15em}
+  .lead{font-size:clamp(17px,1.15vw,22px);color:#cfcfcf;max-width:52ch}
   .ctas{display:flex;flex-wrap:wrap;gap:12px}
   .trust{list-style:none;margin:0;padding:18px 0 0;border-top:1px solid #262626;display:flex;flex-wrap:wrap;gap:10px 28px;font-size:14px;color:#a9a9a9}
   .trust b{color:#fff}
   /* коллаж */
-  .collage{position:relative;height:clamp(460px,44vw,600px)}
+  .collage{position:relative;height:clamp(400px,min(36vw,calc(100svh - var(--hdr) - 260px)),680px)}
   .ph{position:absolute;margin:0;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6)}
   .ph img{width:100%;height:100%;object-fit:cover}
   .ph1{right:0;top:0;width:68%;height:88%}
@@ -98,7 +98,7 @@ const years = new Date().getFullYear() - FACTS.since;
   .t2{left:12%;top:8%}
   @keyframes float{50%{transform:translateY(-10px)}}
   /* мини-калькулятор */
-  .mini{position:absolute;left:4%;top:24%;width:min(300px,62%);background:rgba(18,18,18,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #333;padding:20px;display:grid;gap:8px;z-index:2}
+  .mini{position:absolute;left:4%;top:24%;width:min(clamp(280px,18vw,340px),62%);background:rgba(18,18,18,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #333;padding:20px;display:grid;gap:8px;z-index:2}
   .mini-k{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
   .mini label{font-size:13px;color:#bdbdbd}
   .mini-goal{font-size:26px;font-weight:800}
@@ -112,10 +112,10 @@ const years = new Date().getFullYear() - FACTS.since;
   /* полоса цифр */
   .strip{position:relative;border-top:1px solid #222;background:rgba(255,255,255,.02)}
   .strip-in{display:grid;grid-template-columns:repeat(4,1fr)}
-  .strip-in div{padding:26px 20px;border-left:1px solid #222;display:grid;gap:4px}
+  .strip-in div{padding:clamp(18px,1.6vw,28px) 20px;border-left:1px solid #222;display:grid;gap:4px}
   .strip-in div:first-child{border-left:0;padding-left:0}
-  .strip b{font-size:clamp(28px,3vw,40px);font-weight:800;line-height:1}
-  .strip span{font-size:13px;color:#a9a9a9}
+  .strip b{font-size:clamp(28px,2.3vw,44px);font-weight:800;line-height:1}
+  .strip span{font-size:clamp(13px,.75vw,15px);color:#a9a9a9}
   @media (max-width:980px){
     .hero-in{grid-template-columns:1fr}
     .collage{height:520px;max-width:560px;width:100%;margin-inline:auto}
