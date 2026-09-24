@@ -13,7 +13,7 @@ const path = Astro.url.pathname;
     </nav>
     <div class="contact">
       <span class="phone num">{FACTS.phone}</span>
-      <a class="btn sm" href="#zayavka">Получить расчёт</a>
+      <a class="btn sm ghost" href="#zayavka">Связаться</a>
     </div>
     <button class="burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
   </div>
@@ -30,8 +30,8 @@ const path = Astro.url.pathname;
   .hdr.light{background:#fff;color:var(--ink);border-bottom-color:var(--line)}
   .hdr.light .logo img{filter:invert(1)}
   .bar{display:flex;align-items:center;gap:clamp(20px,2.4vw,48px);min-height:var(--hdr)}
-  .logo img{width:clamp(118px,8vw,150px);height:auto}
-  nav{flex:1}
+  .logo{flex:0 0 auto}.logo img{width:clamp(118px,8vw,150px);height:auto}
+  nav{flex:1;min-width:0}
   nav ul{list-style:none;display:flex;gap:clamp(14px,1.6vw,34px);margin:0;padding:0;flex-wrap:nowrap}
   nav a{white-space:nowrap}
   @media (max-width:1320px){.phone{display:none}}

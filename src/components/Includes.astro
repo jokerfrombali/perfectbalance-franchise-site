@@ -1,11 +1,11 @@
 ---
 // «Что входит» — бенто-сетка с живыми мини-сценами. Все анимации CSS, без библиотек; при prefers-reduced-motion стоят на месте.
 const dishes = [["Чизкейк ванильный с клубникой", 390], ["Творожник с персиковым конфитюром", 380], ["Отбивная в кунжутной панировке", 248], ["Морковное пирожное с фисташками", 368], ["Кефтедес в горчичном соусе", 379], ["Филе в соусе песто", 195]];
-const small = [["Блогеры", "Методика привлечения клиентов через лидеров мнений вашего города."], ["Контент", "Фото, баннеры и сертификаты для рекламы с первого дня."], ["Помещение", "Подбор помещения и проект расстановки оборудования."], ["Офлайн-продвижение", "Материалы для наружной рекламы и партнёрств."], ["Поддержка", "Найм, бухгалтерия, управление — на каждом этапе."]];
+const small = [["Блогеры", "Методика привлечения клиентов через лидеров мнений вашего города."], ["Контент", "Фото, баннеры и сертификаты для рекламы с первого дня."], ["Помещение", "Подбор помещения и проект расстановки оборудования."], ["Офлайн-продвижение", "Материалы для наружной рекламы и партнёрств."]];
 ---
 <section class="section dark inc" data-spot>
   <div class="wrap">
-    <div class="head"><span class="eyebrow">Что входит</span><h2>Вы получаете <span class="mark">работающий бизнес</span>, а не логотип</h2><p class="muted">10 составляющих франшизы — всё, что сеть отработала за 8 лет в 24 городах.</p></div>
+    <div class="head"><span class="eyebrow">Что входит</span><h2>Вы получаете <span class="mark">работающий бизнес</span>, а не логотип</h2><p class="muted">10 составляющих франшизы — всё, что сеть отработала за 8 лет в 24 городах. Вы получаете не только инструменты, но и команду рядом.</p></div>
     <div class="bento">
       <article class="tile t-menu">
         <div class="txt"><span class="k">01</span><h3>Меню и техкарты</h3><p>840 блюд в год с КБЖУ и ТТК. Повторы — не раньше чем через 2,5 месяца.</p></div>
@@ -33,6 +33,20 @@ const small = [["Блогеры", "Методика привлечения кл�
       </article>
 
       {small.map(([t, d], i) => <article class="tile t-sm"><div class="txt"><span class="k">{String(i + 6).padStart(2, "0")}</span><h3>{t}</h3><p>{d}</p></div></article>)}
+      <article class="tile t-team">
+        <div class="team-txt">
+          <span class="k">10 · Команда и поддержка</span>
+          <h3>Вы не один: за вами — <span class="mark">вся сеть</span></h3>
+          <p>Основатель с 8-летним опытом в доставке правильного питания, команда сети и партнёры в 24 городах, которые уже прошли ваш путь. Найм, бухгалтерия, реклама, кухня — на каждый вопрос есть ответ и регламент.</p>
+          <p class="promise">От вас нужно одно — <b>работать и следовать стандартам сети.</b> Всё остальное уже отработано.</p>
+        </div>
+        <div class="team-stats">
+          <div><b>24</b><span>города — партнёры, у которых можно спросить</span></div>
+          <div><b>8 лет</b><span>опыта основателя и сети</span></div>
+          <div><b>3</b><span>закрытия за всю историю</span></div>
+          <div><b>39</b><span>регламентов и скриптов</span></div>
+        </div>
+      </article>
     </div>
     <p style="margin-top:32px"><a class="btn ghost" href="/franshiza/">Все условия франшизы</a></p>
   </div>
@@ -57,7 +71,16 @@ const small = [["Блогеры", "Методика привлечения кл�
   .t-app,.t-ads{grid-column:span 3}
   .t-kb{grid-column:span 2;grid-row:span 2}
   .t-sm{grid-column:span 2}
-  .t-sm:last-child{grid-column:span 6;flex-direction:row;align-items:center}
+
+  .t-team{grid-column:span 6;display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(20px,3vw,48px);align-items:center;background:linear-gradient(120deg,#1a0503,#141414 55%);border-color:#3a1512;padding:clamp(24px,3vw,44px)}
+  .team-txt{display:grid;gap:14px;position:relative;z-index:1}
+  .t-team h3{font-size:clamp(24px,2.1vw,40px);line-height:1.15}
+  .t-team p{max-width:none;font-size:clamp(15px,.95vw,18px)}
+  .t-team .promise{color:#fff;border-left:3px solid var(--red);padding-left:14px}
+  .team-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#2a2a2a;position:relative;z-index:1}
+  .team-stats div{background:#101010;padding:clamp(16px,1.4vw,24px);display:grid;gap:4px}
+  .team-stats b{font-size:clamp(28px,2.4vw,44px);font-weight:800;line-height:1;color:#fff}
+  .team-stats span{font-size:13px;color:#a9a9a9}
   /* меню: бесконечная прокрутка */
   .menu-scroll{height:210px;overflow:hidden;mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
   .ms{display:grid;gap:8px;animation:up 16s linear infinite}
@@ -86,7 +109,7 @@ const small = [["Блогеры", "Методика привлечения кл�
   .files{position:relative;height:190px}
   .files span{position:absolute;left:calc(var(--i) * 14px);top:calc(var(--i) * 34px);right:calc(24px - var(--i) * 6px);background:#fff;color:#111;font-size:13px;font-weight:700;padding:14px 16px;box-shadow:0 10px 24px rgba(0,0,0,.5);border-left:4px solid var(--red);transition:transform .35s}
   .t-kb:hover .files span{transform:translate(calc(var(--i) * 8px), calc(var(--i) * -6px)) rotate(calc(var(--i) * -2deg))}
-  @media (max-width:1000px){.bento{grid-template-columns:repeat(2,1fr)}.tile,.t-menu,.t-site,.t-app,.t-ads,.t-kb,.t-sm,.t-sm:last-child{grid-column:span 1;grid-row:auto}.t-menu,.t-site{grid-column:span 2}}
+  @media (max-width:1000px){.bento{grid-template-columns:repeat(2,1fr)}.tile,.t-menu,.t-site,.t-app,.t-ads,.t-kb,.t-sm{grid-column:span 1;grid-row:auto}.t-team{grid-column:1/-1;grid-template-columns:1fr}.t-menu,.t-site{grid-column:span 2}}
   @media (max-width:600px){.bento{grid-template-columns:1fr}.t-menu,.t-site{grid-column:span 1}.t-site{flex-direction:column;align-items:flex-start}}
   @media (prefers-reduced-motion:reduce){.ms,.scr img,.chart i,.line path,.line circle{animation:none}.line path{stroke-dashoffset:0}}
 </style>

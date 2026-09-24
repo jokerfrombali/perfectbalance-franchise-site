@@ -6,6 +6,7 @@ import LeadForm from "../components/LeadForm.astro";
 import Shorts from "../components/Shorts.astro";
 import Marquee from "../components/Marquee.astro";
 import Hero from "../components/Hero.astro";
+import Faq from "../components/Faq.astro";
 import Includes from "../components/Includes.astro";
 import { FACTS, BUDGET, rub } from "../data/facts";
 import free from "../data/cities_free.json";
@@ -38,6 +39,8 @@ const faq = [
   ["Сколько человек нужно на старте?", "Двое: повар и администратор. Курьеров в штат не берём — работаем с курьерскими службами."],
   ["С каких городов вы начинаете?", "От 150 тысяч жителей. Есть успешная точка и в городе на 75 тысяч с высоким доходом жителей, но это решаем индивидуально."],
   ["Какое роялти?", "Условия по роялти пришлём вместе с экономической моделью."],
+  ["А если у меня не получится?", "За 8 лет закрылись только 3 точки из всей сети. Мы заранее проверяем город и партнёра, а после запуска рядом команда сети, основатель и партнёры из 24 городов. Кто работает по стандартам сети — меню, реклама, сервис, учёт, — выходит на плановые цифры."],
+  ["Сколько времени придётся уделять бизнесу?", "Первые месяцы — полноценная работа: запуск, найм, первые клиенты. Когда точка выходит на стабильную выручку, операционку можно передать администратору и заниматься развитием."],
 ];
 ---
 <Base title="Франшиза доставки правильного питания Perfect Balance — окупаемость 10–14 месяцев" description={`Франшиза доставки ПП-питания по подписке: паушальный взнос от 350 000 ₽, окупаемость 10–14 месяцев, маржинальность 26%. ${FACTS.cities} города сети, работаем с ${FACTS.since} года. Калькулятор дохода.`}>
@@ -146,13 +149,7 @@ const faq = [
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <div class="head"><span class="eyebrow">Вопросы</span><h2>Частые вопросы</h2></div>
-      <div class="faq">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div>
-      <p style="margin-top:22px"><a class="btn ghost" href="/faq/">Все вопросы</a></p>
-    </div>
-  </section>
+  <Faq items={faq as [string, string][]} />
 
   <LeadForm source="home" />
 </Base>

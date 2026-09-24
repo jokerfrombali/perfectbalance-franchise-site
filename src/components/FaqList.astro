@@ -1,0 +1,43 @@
+---
+interface Props { items: [string, string][] }
+const { items } = Astro.props;
+---
+<div class="acc">
+      {items.map(([q, a], i) => (
+        <details open={i === 0}>
+          <summary><span class="n">{String(i + 1).padStart(2, "0")}</span><span class="q">{q}</span><span class="ic" aria-hidden="true"></span></summary>
+          <div class="ans"><p>{a}</p></div>
+        </details>
+      ))}
+    </div>
+<style>
+  .faq-grid{display:grid;grid-template-columns:minmax(280px,.8fr) 1.4fr;gap:clamp(32px,5vw,96px);align-items:start}
+  .side{position:sticky;top:calc(var(--hdr) + 24px);display:grid;gap:22px}
+  .ask{background:var(--black);color:#fff;padding:clamp(22px,2vw,32px);display:grid;gap:10px;position:relative;overflow:hidden}
+  .ask::after{content:"?";position:absolute;right:-10px;bottom:-60px;font-size:220px;font-weight:800;color:rgba(199,13,0,.25);line-height:1}
+  .ask b{font-size:clamp(20px,1.4vw,26px)}
+  .ask p{color:#bdbdbd;position:relative;z-index:1}
+  .tg span{color:#fff;font-weight:700}
+  .ask .btn{justify-self:start;position:relative;z-index:1;margin-top:6px}
+  .all{font-weight:700;text-decoration:none}.all:hover{color:var(--red)}
+  .acc{display:grid;gap:12px}
+  details{border:1px solid var(--line);background:#fff;transition:border-color .25s,box-shadow .25s}
+  details:hover{border-color:#cfcfcf}
+  details[open]{border-color:var(--ink);box-shadow:0 18px 40px rgba(0,0,0,.07)}
+  summary{list-style:none;display:grid;grid-template-columns:auto 1fr auto;gap:clamp(14px,1.6vw,26px);align-items:center;padding:clamp(18px,1.6vw,28px) clamp(18px,2vw,32px);cursor:pointer}
+  summary::-webkit-details-marker{display:none}
+  .n{font-size:clamp(14px,.9vw,17px);font-weight:800;color:var(--red)}
+  .q{font-size:clamp(18px,1.35vw,26px);font-weight:700;line-height:1.3}
+  .ic{position:relative;width:40px;height:40px;border-radius:50%;background:var(--soft);transition:background .25s,transform .35s}
+  .ic::before,.ic::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:2px;margin:-1px 0 0 -7px;background:var(--ink);transition:transform .35s,background .25s}
+  .ic::after{transform:rotate(90deg)}
+  details[open] .ic{background:var(--red);transform:rotate(180deg)}
+  details[open] .ic::before,details[open] .ic::after{background:#fff}
+  details[open] .ic::after{transform:rotate(0)}
+  .ans{padding:0 clamp(18px,2vw,32px) clamp(20px,1.8vw,30px) calc(clamp(18px,2vw,32px) + clamp(14px,1.6vw,26px) + 2ch)}
+  .ans p{font-size:clamp(16px,1.05vw,20px);color:#3d3d3d;line-height:1.6;max-width:62ch}
+  details[open] .ans{animation:open .35s ease}
+  @keyframes open{from{opacity:0;transform:translateY(-8px)}}
+  @media (max-width:900px){.faq-grid{grid-template-columns:1fr}.side{position:static}.ans{padding-left:clamp(18px,2vw,32px)}}
+  @media (prefers-reduced-motion:reduce){details[open] .ans{animation:none}.ic,.ic::before,.ic::after{transition:none}}
+</style>

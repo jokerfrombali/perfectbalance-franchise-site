@@ -8,11 +8,17 @@ const years = new Date().getFullYear() - FACTS.since;
   <div class="bg" aria-hidden="true"><div class="glow"></div><div class="grid-lines"></div><div class="giant">PERFECT BALANCE</div></div>
   <div class="wrap hero-in">
     <div class="h-txt">
-      <h1>Свой бизнес на&nbsp;доставке правильного питания <span class="mark">с окупаемостью <span style="white-space:nowrap">10–14 месяцев</span></span></h1>
-      <p class="lead">Работайте на себя и зарабатывайте от 200 000 ₽ в месяц.</p>
+      <span class="kick">Франшиза Perfect Balance</span>
+      <h1>Свой бизнес на&nbsp;доставке правильного питания</h1>
+      <div class="payback">
+        <div class="pb-main"><b class="num">10–14</b><span>месяцев<br>окупаемость</span></div>
+        <i></i>
+        <div class="pb-side"><b class="num">от 350 тыс. ₽</b><span>паушальный взнос</span></div>
+      </div>
+      <p class="lead">Работайте на себя и зарабатывайте от 200 000 ₽ в месяц — по системе, которая уже работает в 24 городах.</p>
       <div class="ctas">
-        <a class="btn" href="#zayavka">Получить экономическую модель</a>
-        <a class="btn ghost" href="#calc">Подробный расчёт</a>
+        <a class="btn" href="#zayavka">Получить расчёт окупаемости</a>
+        <a class="txtlink" href="#calc">или посчитать самому ↓</a>
       </div>
     </div>
 
@@ -31,17 +37,36 @@ const years = new Date().getFullYear() - FACTS.since;
           <div><b class="num" data-o="cl">44</b><span>клиента в день</span></div>
           <div><b class="num" data-o="pb">11</b><span>мес. окупаемость</span></div>
         </div>
-        <a href="#calc" class="mini-link">Настроить под мой город →</a>
       </form>
     </div>
   </div>
 
   <div class="strip">
     <div class="wrap strip-in">
-      <div><b class="num" data-count="117">117</b><span>млн ₽ прибыли сети за 2021</span></div>
-      <div><b class="num"><span data-count="26">26</span>%</b><span>средняя маржинальность</span></div>
-      <div><b class="num" data-count={FACTS.cities}>{FACTS.cities}</b><span>города в сети</span></div>
-      <div><b class="num">1–30</b><span>дней подписки, оплата вперёд</span></div>
+      <div class="cell">
+        <span class="lbl">Прибыль сети за 2021</span>
+        <b class="big num"><span data-count="117">117</span><small>млн ₽</small></b>
+        <span class="bar"><i style="--w:100%"></i></span>
+      </div>
+      <div class="cell">
+        <span class="lbl">Средняя маржинальность</span>
+        <div class="row">
+          <svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="#2a2a2a" stroke-width="6"/><circle class="arc" cx="22" cy="22" r="18" fill="none" stroke="#C70D00" stroke-width="6" pathLength="100" stroke-dasharray="26 100" transform="rotate(-90 22 22)"/></svg>
+          <b class="big num"><span data-count="26">26</span><small>%</small></b>
+        </div>
+      </div>
+      <div class="cell">
+        <span class="lbl">Городов в сети</span>
+        <div class="row">
+          <b class="big num"><span data-count={FACTS.cities}>{FACTS.cities}</span></b>
+          <span class="dots" aria-hidden="true">{Array.from({ length: FACTS.cities }, (_, i) => <i style={`--i:${i}`}></i>)}</span>
+        </div>
+      </div>
+      <div class="cell">
+        <span class="lbl">Подписка, оплата вперёд</span>
+        <b class="big num">1–30<small>дней</small></b>
+        <span class="scale" aria-hidden="true">{Array.from({ length: 30 }, (_, i) => <i style={`--i:${i}`}></i>)}</span>
+      </div>
     </div>
   </div>
 </section>
@@ -75,17 +100,17 @@ const years = new Date().getFullYear() - FACTS.since;
   @keyframes breathe{to{transform:translate(-6%,6%) scale(1.1)}}
   @keyframes slide{to{transform:translateX(-25%)}}
   .hero-in{flex:1;width:100%;position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,3vw,48px);align-items:center;padding-block:clamp(28px,3vw,56px)}
-  .h-txt{display:grid;gap:20px}
+  .h-txt{display:grid;gap:clamp(14px,2svh,22px)}
   .badge{display:inline-flex;align-items:center;gap:10px;width:max-content;max-width:100%;font-size:13px;font-weight:600;padding:8px 14px;border:1px solid #333;background:rgba(255,255,255,.04)}
   .dot{width:8px;height:8px;border-radius:50%;background:#2BB36A;box-shadow:0 0 0 0 rgba(43,179,106,.6);animation:pulse 2s infinite}
   @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(43,179,106,0)}100%{box-shadow:0 0 0 0 rgba(43,179,106,0)}}
-  h1{font-size:clamp(34px,min(3.5vw,6.2svh),68px);letter-spacing:-.01em;max-width:15em}
+  h1{font-size:clamp(34px,min(3.3vw,5.6svh),64px);letter-spacing:-.01em}
   .lead{font-size:clamp(17px,1.15vw,22px);color:#cfcfcf;max-width:52ch}
   .ctas{display:flex;flex-wrap:wrap;gap:12px}
   .trust{list-style:none;margin:0;padding:18px 0 0;border-top:1px solid #262626;display:flex;flex-wrap:wrap;gap:10px 28px;font-size:14px;color:#a9a9a9}
   .trust b{color:#fff}
   /* коллаж */
-  .collage{position:relative;height:clamp(400px,min(36vw,calc(100svh - var(--hdr) - 260px)),680px)}
+  .collage{position:relative;height:clamp(400px,min(36vw,calc(100svh - var(--hdr) - 330px)),680px)}
   .ph{position:absolute;margin:0;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6)}
   .ph img{width:100%;height:100%;object-fit:cover}
   .ph1{right:0;top:0;width:68%;height:88%}
@@ -109,17 +134,51 @@ const years = new Date().getFullYear() - FACTS.since;
   .mini-res div{background:#fff;color:#111;padding:10px 12px;display:grid}
   .mini-res b{font-size:28px;font-weight:800;line-height:1}.mini-res span{font-size:12px;color:#626262}
   .mini-link{font-size:13px;font-weight:700;text-decoration:none;color:#fff;margin-top:4px}.mini-link:hover{color:var(--red)}
+
+  .kick{font-size:clamp(12px,.75vw,14px);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bdbdbd;display:flex;align-items:center;gap:12px}
+  .kick::before{content:"";width:36px;height:2px;background:var(--red)}
+  .payback{display:flex;align-items:center;gap:clamp(16px,1.8vw,32px);flex-wrap:nowrap}
+  @media (max-width:560px){.payback{flex-wrap:wrap}.payback > i{display:none}}
+  .payback > i{width:1px;align-self:stretch;background:#333}
+  .pb-main{display:flex;align-items:center;gap:14px}
+  .pb-main b{font-size:clamp(46px,min(4.2vw,7svh),80px);font-weight:800;line-height:.9;color:var(--red);letter-spacing:-.02em}
+  .pb-main span{font-size:clamp(14px,.95vw,18px);font-weight:700;line-height:1.2;text-transform:uppercase;letter-spacing:.06em}
+  .pb-side{display:grid;gap:2px}
+  .pb-side b{font-size:clamp(20px,1.6vw,30px);font-weight:800}
+  .pb-side span{font-size:clamp(13px,.8vw,15px);color:#a9a9a9}
+  .txtlink{align-self:center;font-weight:700;color:#cfcfcf;text-decoration:none;border-bottom:1px solid #555;padding-bottom:2px}
+  .txtlink:hover{color:#fff;border-color:var(--red)}
+  .strip-in .cell{display:grid;gap:8px;align-content:start;padding:clamp(14px,1.2vw,22px) clamp(16px,1.6vw,28px);border-left:1px solid #222;position:relative;transition:background .3s}
+  .strip-in .cell:first-child{border-left:0;padding-left:0}
+  .strip-in .cell::before{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+  .strip-in .cell:hover::before{transform:scaleX(1)}
+  .lbl{font-size:clamp(11px,.68vw,13px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8f8f8f}
+  .big{font-size:clamp(34px,2.8vw,56px);font-weight:800;line-height:1;display:flex;align-items:baseline;gap:8px}
+  .big small{font-size:.38em;font-weight:700;color:#a9a9a9}
+  .row{display:flex;align-items:center;gap:14px}
+  .bar{display:block;height:4px;background:#222}.bar i{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--red),#ff5a4d);animation:fillx 1.6s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes fillx{from{width:0}}
+  .ring{width:clamp(40px,3vw,56px);height:auto;flex:none}
+  .ring .arc{animation:ring 1.6s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes ring{from{stroke-dasharray:0 100}}
+  .dots{display:grid;grid-template-columns:repeat(12,7px);gap:4px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;animation:dot .3s ease forwards;animation-delay:calc(var(--i) * 45ms)}
+  .dots i:nth-child(3n){background:var(--red)}
+  @keyframes dot{to{opacity:1}}
+  .scale{display:grid;grid-template-columns:repeat(30,1fr);gap:2px;height:10px}
+  .scale i{background:#333}.scale i:nth-child(-n+30){background:linear-gradient(#fff,#bbb);opacity:calc(.25 + var(--i) * .025)}
+  @media (prefers-reduced-motion:reduce){.bar i,.ring .arc,.dots i{animation:none;opacity:1}}
   /* полоса цифр */
   .strip{position:relative;border-top:1px solid #222;background:rgba(255,255,255,.02)}
   .strip-in{display:grid;grid-template-columns:repeat(4,1fr)}
-  .strip-in div{padding:clamp(18px,1.6vw,28px) 20px;border-left:1px solid #222;display:grid;gap:4px}
-  .strip-in div:first-child{border-left:0;padding-left:0}
-  .strip b{font-size:clamp(28px,2.3vw,44px);font-weight:800;line-height:1}
-  .strip span{font-size:clamp(13px,.75vw,15px);color:#a9a9a9}
+  .strip-in > .cell-old{padding:clamp(18px,1.6vw,28px) 20px;border-left:1px solid #222;display:grid;gap:4px}
+  .strip-in > .cell-old:first-child{border-left:0;padding-left:0}
+  .strip .old-b{font-size:clamp(28px,2.3vw,44px);font-weight:800;line-height:1}
+  .strip .old-span{font-size:clamp(13px,.75vw,15px);color:#a9a9a9}
   @media (max-width:980px){
     .hero-in{grid-template-columns:1fr}
     .collage{height:520px;max-width:560px;width:100%;margin-inline:auto}
-    .strip-in{grid-template-columns:1fr 1fr}.strip-in div:nth-child(3){border-left:0;padding-left:0}
+    .strip-in{grid-template-columns:1fr 1fr}.strip-in > .cell:nth-child(3){border-left:0;padding-left:0}
   }
   @media (max-width:520px){
     .collage{height:auto;display:grid;gap:12px}

@@ -4,6 +4,7 @@ import PageHero from "../components/PageHero.astro";
 import Calculator from "../components/Calculator.astro";
 import FounderVideo from "../components/FounderVideo.astro";
 import LeadForm from "../components/LeadForm.astro";
+import FaqList from "../components/FaqList.astro";
 import { PAGES, type P } from "../data/pages";
 import { BUDGET, rub } from "../data/facts";
 export function getStaticPaths() { return PAGES.map((p) => ({ params: { page: p.slug }, props: { p } })); }
@@ -26,7 +27,7 @@ const faqSchema = p.blocks.find((b) => b.t === "faq") as any;
         {b.t === "calc" && <><div class="head"><h2>Калькулятор дохода</h2></div><Calculator /></>}
         {b.t === "video" && <div class="vid"><FounderVideo /></div>}
         {b.t === "cases" && <div class="grid g3">{[["Магнитогорск", "413 тыс. жителей"], ["Набережные Челны", "528 тыс. жителей"], ["Омск", "1,1 млн жителей"]].map(([c, pop]) => <div class="card"><h3>{c}</h3><p class="muted">{pop}</p><p>Срок окупаемости, выручка по месяцам и отзыв партнёра — после согласования с партнёром.</p><span class="todo">кейс уточняется</span></div>)}</div>}
-        {b.t === "faq" && <div class="faq">{b.items.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</div>}
+        {b.t === "faq" && <FaqList items={b.items} />}
       </div>
     </section>
   ))}
