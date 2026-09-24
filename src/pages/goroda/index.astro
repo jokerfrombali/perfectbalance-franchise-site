@@ -1,0 +1,27 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import free from "../../data/cities_free.json";
+import net from "../../data/cities_net.json";
+const A = free.filter((c) => c.tier === "A"), B = free.filter((c) => c.tier === "B");
+---
+<Base title="Города франшизы Perfect Balance: где работаем и какие города свободны" description={`Perfect Balance работает в ${net.length} городах. Список свободных городов с высоким спросом на доставку правильного питания — забронируйте свой.`}>
+  <PageHero eyebrow="Города" title={`${net.length} города в сети. <span class="mark">${free.length} свободны</span>`} lead="Один партнёр на город. Свободные города отсортированы по спросу на доставку правильного питания по данным Яндекса." crumbs={[{ href: "/goroda/", label: "Города" }]} />
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Свободны · приоритет</span><h2>Города с самым высоким спросом</h2></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Город</th><th class="r">Жителей, тыс.</th><th class="r">Запросов ПП-доставки в месяц</th><th class="r">На 100 тыс. жителей</th><th></th></tr></thead>
+        <tbody>{A.map((c) => <tr><td><a href={`/goroda/${c.slug}/`}><b>{c.city}</b></a></td><td class="r">{c.pop}</td><td class="r">{c.b2c}</td><td class="r">{c.per100}</td><td><a href={`/goroda/${c.slug}/`}>Подробнее →</a></td></tr>)}</tbody>
+      </table></div>
+      <div class="head" style="margin-top:56px"><span class="eyebrow">Свободны · вторая волна</span><h2>Ещё {B.length} городов</h2></div>
+      <div class="list">{B.map((c) => <a href={`/goroda/${c.slug}/`}>{c.city}</a>)}</div>
+      <div class="head" style="margin-top:56px"><span class="eyebrow">Уже работаем</span><h2>Города сети Perfect Balance</h2></div>
+      <div class="list">{net.map((c) => <a href={`/goroda/${c.slug}/`}>{c.city}</a>)}</div>
+      <p class="muted" style="margin-top:28px">Вашего города нет в списке? Если в нём от 150 тысяч жителей, оставьте заявку — проверим спрос бесплатно.</p>
+    </div>
+  </section>
+  <LeadForm source="cities" />
+</Base>
+<style>.list{display:flex;flex-wrap:wrap;gap:10px}.list a{padding:10px 16px;border:1px solid var(--line);text-decoration:none;font-weight:600}.list a:hover{border-color:var(--red);color:var(--red)}</style>

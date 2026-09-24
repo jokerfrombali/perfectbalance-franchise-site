@@ -1,0 +1,92 @@
+---
+// «Что входит» — бенто-сетка с живыми мини-сценами. Все анимации CSS, без библиотек; при prefers-reduced-motion стоят на месте.
+const dishes = [["Чизкейк ванильный с клубникой", 390], ["Творожник с персиковым конфитюром", 380], ["Отбивная в кунжутной панировке", 248], ["Морковное пирожное с фисташками", 368], ["Кефтедес в горчичном соусе", 379], ["Филе в соусе песто", 195]];
+const small = [["Блогеры", "Методика привлечения клиентов через лидеров мнений вашего города."], ["Контент", "Фото, баннеры и сертификаты для рекламы с первого дня."], ["Помещение", "Подбор помещения и проект расстановки оборудования."], ["Офлайн-продвижение", "Материалы для наружной рекламы и партнёрств."], ["Поддержка", "Найм, бухгалтерия, управление — на каждом этапе."]];
+---
+<section class="section dark inc" data-spot>
+  <div class="wrap">
+    <div class="head"><span class="eyebrow">Что входит</span><h2>Вы получаете <span class="mark">работающий бизнес</span>, а не логотип</h2><p class="muted">10 составляющих франшизы — всё, что сеть отработала за 8 лет в 24 городах.</p></div>
+    <div class="bento">
+      <article class="tile t-menu">
+        <div class="txt"><span class="k">01</span><h3>Меню и техкарты</h3><p>840 блюд в год с КБЖУ и ТТК. Повторы — не раньше чем через 2,5 месяца.</p></div>
+        <div class="menu-scroll" aria-hidden="true"><div class="ms">{[0, 1].map(() => dishes.map(([n, k]) => <div class="dish"><span>{n}</span><b>{k} ккал</b></div>))}</div></div>
+      </article>
+
+      <article class="tile t-site">
+        <div class="txt"><span class="k">02</span><h3>Сайт и CRM</h3><p>Поддомен вашего города с калькулятором рациона и онлайн-оплатой.</p></div>
+        <div class="phone" aria-hidden="true"><div class="notch"></div><div class="scr"><img src="/img/partner-site.webp" alt="" loading="lazy" /></div></div>
+      </article>
+
+      <article class="tile t-app">
+        <div class="txt"><span class="k">03</span><h3>Приложение учёта</h3><p>Заказы, клиенты, логистика и выручка в одном окне.</p></div>
+        <div class="chart" aria-hidden="true">{[38, 52, 47, 64, 58, 76, 88].map((h, i) => <i style={`--h:${h}%;--d:${i * 0.12}s`}></i>)}</div>
+      </article>
+
+      <article class="tile t-ads">
+        <div class="txt"><span class="k">04</span><h3>Реклама под ключ</h3><p>Подрядчики сети ведут Яндекс Директ и соцсети по отработанным кампаниям.</p></div>
+        <svg class="line" viewBox="0 0 300 90" aria-hidden="true"><path d="M0 80 C40 76 60 60 90 62 S150 40 180 36 S240 14 300 8" fill="none" stroke="#C70D00" stroke-width="3" pathLength="1" /><circle cx="300" cy="8" r="5" fill="#fff" /></svg>
+      </article>
+
+      <article class="tile t-kb">
+        <div class="txt"><span class="k">05</span><h3>39 файлов базы знаний</h3><p>Инструкции, скрипты продаж, договоры, регламенты.</p></div>
+        <div class="files" aria-hidden="true">{["Скрипты продаж", "Регламент кухни", "Договор поставки", "Найм повара"].map((f, i) => <span style={`--i:${i}`}>{f}</span>)}</div>
+      </article>
+
+      {small.map(([t, d], i) => <article class="tile t-sm"><div class="txt"><span class="k">{String(i + 6).padStart(2, "0")}</span><h3>{t}</h3><p>{d}</p></div></article>)}
+    </div>
+    <p style="margin-top:32px"><a class="btn ghost" href="/franshiza/">Все условия франшизы</a></p>
+  </div>
+</section>
+<script>
+  // подсветка за курсором
+  document.querySelectorAll<HTMLElement>("[data-spot] .tile").forEach((t) => t.addEventListener("pointermove", (e) => {
+    const r = t.getBoundingClientRect(); t.style.setProperty("--mx", `${e.clientX - r.left}px`); t.style.setProperty("--my", `${e.clientY - r.top}px`);
+  }));
+</script>
+<style>
+  .bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(150px,auto);gap:14px}
+  .tile{position:relative;overflow:hidden;background:#141414;border:1px solid #242424;padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;transition:border-color .3s,transform .3s}
+  .tile::before{content:"";position:absolute;inset:0;background:radial-gradient(360px circle at var(--mx,-400px) var(--my,-400px),rgba(199,13,0,.22),transparent 60%);pointer-events:none;transition:opacity .3s}
+  .tile:hover{border-color:#3a3a3a;transform:translateY(-3px)}
+  .txt{position:relative;display:grid;gap:8px;z-index:1}
+  .k{font-size:12px;font-weight:800;color:var(--red);letter-spacing:.12em}
+  .tile h3{font-size:clamp(18px,1.6vw,22px)}
+  .tile p{font-size:14px;color:#a9a9a9;max-width:36ch}
+  .t-menu{grid-column:span 3;grid-row:span 2}
+  .t-site{grid-column:span 3;grid-row:span 2;flex-direction:row;align-items:center}
+  .t-app,.t-ads{grid-column:span 3}
+  .t-kb{grid-column:span 2;grid-row:span 2}
+  .t-sm{grid-column:span 2}
+  .t-sm:last-child{grid-column:span 6;flex-direction:row;align-items:center}
+  /* меню: бесконечная прокрутка */
+  .menu-scroll{height:210px;overflow:hidden;mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
+  .ms{display:grid;gap:8px;animation:up 16s linear infinite}
+  .dish{display:flex;justify-content:space-between;gap:12px;background:#1d1d1d;padding:12px 14px;font-size:14px}
+  .dish b{color:#fff;background:var(--red);padding:1px 8px;font-size:12px;white-space:nowrap}
+  @keyframes up{to{transform:translateY(-50%)}}
+  /* телефон с прокручивающимся сайтом */
+  .phone{position:relative;flex:0 0 150px;height:290px;border:6px solid #2a2a2a;border-radius:26px;background:#000;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+  .notch{position:absolute;top:6px;left:50%;width:46px;height:8px;margin-left:-23px;background:#2a2a2a;border-radius:6px;z-index:2}
+  .scr{position:absolute;inset:0;overflow:hidden}
+  .scr img{width:100%;height:auto;min-height:200%;object-fit:cover;object-position:top;animation:scr 12s ease-in-out infinite alternate}
+  @keyframes scr{to{transform:translateY(-50%)}}
+  .t-site .txt{flex:1}
+  /* столбики */
+  .chart{display:flex;align-items:flex-end;gap:8px;height:90px}
+  .chart i{flex:1;height:var(--h);background:linear-gradient(#fff,#6b6b6b);transform-origin:bottom;animation:grow 2.4s cubic-bezier(.2,.8,.2,1) var(--d) infinite alternate}
+  .chart i:last-child{background:var(--red)}
+  @keyframes grow{from{transform:scaleY(.25)}}
+  /* линия рекламы */
+  .line{width:100%;height:auto}
+  .line path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 3.2s ease-out infinite}
+  .line circle{animation:blink 3.2s infinite}
+  @keyframes draw{60%,100%{stroke-dashoffset:0}}
+  @keyframes blink{0%,55%{opacity:0}65%,100%{opacity:1}}
+  /* файлы */
+  .files{position:relative;height:190px}
+  .files span{position:absolute;left:calc(var(--i) * 14px);top:calc(var(--i) * 34px);right:calc(24px - var(--i) * 6px);background:#fff;color:#111;font-size:13px;font-weight:700;padding:14px 16px;box-shadow:0 10px 24px rgba(0,0,0,.5);border-left:4px solid var(--red);transition:transform .35s}
+  .t-kb:hover .files span{transform:translate(calc(var(--i) * 8px), calc(var(--i) * -6px)) rotate(calc(var(--i) * -2deg))}
+  @media (max-width:1000px){.bento{grid-template-columns:repeat(2,1fr)}.tile,.t-menu,.t-site,.t-app,.t-ads,.t-kb,.t-sm,.t-sm:last-child{grid-column:span 1;grid-row:auto}.t-menu,.t-site{grid-column:span 2}}
+  @media (max-width:600px){.bento{grid-template-columns:1fr}.t-menu,.t-site{grid-column:span 1}.t-site{flex-direction:column;align-items:flex-start}}
+  @media (prefers-reduced-motion:reduce){.ms,.scr img,.chart i,.line path,.line circle{animation:none}.line path{stroke-dashoffset:0}}
+</style>

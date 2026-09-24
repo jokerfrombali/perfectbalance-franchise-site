@@ -1,0 +1,72 @@
+:root{
+  --black:#0B0B0B; --ink:#111; --paper:#fff; --soft:#F3F3F1; --line:#E2E1DE; --muted:#626262;
+  --red:#C70D00; --red-dark:#9E0A00; --red-soft:#FCEAE8; --ok:#1F7A45;
+  --f:"Montserrat",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --w:1200px; --g:clamp(16px,4vw,40px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--f);color:var(--ink);background:var(--paper);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.wrap{max-width:var(--w);margin:0 auto;padding-inline:var(--g)}
+h1,h2,h3{line-height:1.12;margin:0;text-wrap:balance;font-weight:800}
+h1{font-size:clamp(32px,5.2vw,60px)}
+h2{font-size:clamp(26px,3.4vw,42px)}
+h3{font-size:clamp(18px,1.8vw,22px);font-weight:700}
+p{margin:0}
+.mark{background:var(--red);color:#fff;padding:0 .18em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.muted{color:var(--muted)}
+.section{padding-block:clamp(56px,8vw,110px)}
+.section.dark{background:var(--black);color:#fff}
+.section.dark .muted{color:#A9A9A9}
+.section.soft{background:var(--soft)}
+.head{display:grid;gap:14px;max-width:760px;margin-bottom:clamp(28px,4vw,48px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 15px/1 var(--f);padding:18px 28px;border:0;cursor:pointer;text-decoration:none;background:var(--red);color:#fff;transition:background .15s}
+.btn:hover{background:var(--red-dark)}
+.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.btn.ghost:hover{background:rgba(127,127,127,.12)}
+.grid{display:grid;gap:clamp(16px,2vw,24px)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.num{font-variant-numeric:tabular-nums}
+.stat b{display:block;font-size:clamp(34px,4.2vw,54px);font-weight:800;line-height:1}
+.stat span{display:block;margin-top:8px;font-size:14px;color:var(--muted)}
+.dark .stat span{color:#A9A9A9}
+.card{background:var(--paper);border:1px solid var(--line);padding:clamp(20px,2.4vw,28px);display:grid;gap:10px;align-content:start}
+.dark .card{background:#161616;border-color:#262626}
+.todo{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#FFF3CD;color:#7A5A00;padding:3px 8px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--black);color:#fff;text-align:left;padding:12px 14px;font-weight:600;font-size:13px}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.us td{background:var(--red-soft);font-weight:700}
+.crumbs{font-size:13px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;padding-top:22px}
+.crumbs a{text-decoration:none}.crumbs a:hover{color:var(--red)}
+.prose{max-width:760px;display:grid;gap:18px;font-size:17px}
+.prose h2{font-size:clamp(24px,2.6vw,32px);margin-top:18px}
+.prose h3{margin-top:6px}
+.prose ul{margin:0;padding-left:22px;display:grid;gap:6px}
+.checks{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.checks li{position:relative;padding-left:30px}
+.checks li::before{content:"";position:absolute;left:0;top:.45em;width:16px;height:9px;border-left:3px solid var(--red);border-bottom:3px solid var(--red);transform:rotate(-45deg)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Живость: карточки, кнопки, появление при прокрутке (прогрессивно — без поддержки браузера всё видно сразу) */
+.card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s}
+a.card:hover,.grid > .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08);border-color:#cfcfcf}
+.dark .grid > .card:hover{box-shadow:0 18px 40px rgba(0,0,0,.5);border-color:#333}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"→";display:inline-block;transition:transform .2s}
+.btn:hover::after{transform:translateX(4px)}
+.mark{background-image:linear-gradient(var(--red),var(--red));background-size:100% 100%;background-repeat:no-repeat}
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion:no-preference){
+    .section .head,.section .card,.section .table-wrap,.section .stat{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 40%}
+  }
+}
+@keyframes rise{from{opacity:.001;transform:translateY(28px)}to{opacity:1;transform:none}}

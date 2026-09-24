@@ -1,0 +1,77 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Calculator from "../../components/Calculator.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import free from "../../data/cities_free.json";
+import net from "../../data/cities_net.json";
+import { FACTS } from "../../data/facts";
+export function getStaticPaths() {
+  return [
+    ...free.filter((c) => c.slug !== "krasnodar").map((c) => ({ params: { slug: c.slug }, props: { kind: "free", c } })),
+    ...net.map((c) => ({ params: { slug: c.slug }, props: { kind: "net", c } })),
+  ];
+}
+const { kind, c } = Astro.props as any;
+const isFree = kind === "free";
+const fee = c.pop >= 700 ? 450000 : 350000;
+const near = free.filter((x) => x.slug !== c.slug && x.tier === "A").slice(0, 6);
+const title = isFree ? `Франшиза доставки правильного питания в ${c.city} — Perfect Balance` : `Perfect Balance в ${c.city}: как работает точка сети`;
+const desc = isFree
+  ? `Франшиза ПП-доставки в ${c.city}: ${c.b2c} запросов доставки правильного питания в месяц по Яндексу. Паушальный взнос ${fee / 1000} тыс. ₽, окупаемость 10–14 месяцев. Проверьте, свободен ли город.`
+  : `Точка Perfect Balance в ${c.city}: как работает партнёр сети. Город занят — посмотрите свободные города рядом.`;
+---
+<Base title={title} description={desc} noindex={!isFree && !c.sub}>
+  {isFree ? (
+    <PageHero eyebrow={c.tier === "A" ? "Приоритетный город" : "Город второй волны"} title={`Франшиза доставки правильного питания <span class="mark">в ${c.city}</span>`} lead={`Город свободен: точки Perfect Balance здесь пока нет. Проверим спрос вместе и забронируем город за вами.`} crumbs={[{ href: "/goroda/", label: "Города" }, { href: `/goroda/${c.slug}/`, label: c.city }]}>
+      <div class="ctas"><a class="btn" href="#zayavka">Забронировать {c.city}</a><a class="btn ghost" href="#calc">Рассчитать доход</a></div>
+    </PageHero>
+  ) : (
+    <PageHero eyebrow="Город сети" title={`Perfect Balance <span class="mark">в ${c.city}</span>`} lead="Здесь уже работает партнёр сети. Ниже — как устроена точка и какие города рядом свободны." crumbs={[{ href: "/goroda/", label: "Города" }, { href: `/goroda/${c.slug}/`, label: c.city }]} />
+  )}
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Спрос в городе</span><h2>{isFree ? `Сколько людей в ${c.city} уже ищут правильное питание` : `Спрос на доставку ПП в ${c.city}`}</h2></div>
+      <div class="grid g4">
+        <div class="stat"><b class="num">{c.b2c}</b><span>запросов доставки правильного питания в месяц (Яндекс Вордстат)</span></div>
+        <div class="stat"><b class="num">{c.per100}</b><span>запросов на 100 тысяч жителей</span></div>
+        <div class="stat"><b class="num">~{c.pop} тыс.</b><span>жителей</span></div>
+        {isFree ? <div class="stat"><b class="num">{fee / 1000} тыс. ₽</b><span>паушальный взнос для города такого размера</span></div> : <div class="stat"><b class="num">{c.score}</b><span>индекс потенциала города из 100</span></div>}
+      </div>
+      {isFree && (
+        <div class="grid g2" style="margin-top:40px">
+          <div class="card"><h3>Почему {c.city} интересен</h3><p>{c.why}.</p></div>
+          <div class="card"><h3>Конкуренция</h3>
+            <p>{c.local != null ? `По запросу «доставка правильного питания ${c.city}» в топ-10 Яндекса — ${c.local} местных сервиса.` : "Конкурентов по городу проверим при анализе заявки."}
+            {c.fed?.length ? ` Из федеральных в выдаче: ${c.fed.join(", ")}.` : " Крупных федеральных сетей в выдаче нет."}</p>
+            <p class="muted">Каждый новый город мы проверяем вручную до подписания договора.</p>
+          </div>
+        </div>
+      )}
+      {!isFree && (
+        <div class="grid g2" style="margin-top:40px">
+          <div class="card"><h3>Кейс партнёра</h3><p class="muted">История запуска, цифры и отзыв партнёра появятся после согласования с ним.</p><span class="todo">кейс уточняется</span></div>
+          <div class="card"><h3>Сайт точки</h3>{c.sub ? <p>Клиенты заказывают на <a href={`https://${c.sub}.perfectbalance.ru/`} rel="noopener" target="_blank">{c.sub}.perfectbalance.ru</a></p> : <p class="muted">—</p>}</div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section soft" id="calc">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Доход точки в {c.city}</h2><p class="muted">Город уже выбран. Меняйте желаемый доход и средний чек.</p></div>
+      <Calculator city={c.city} compact />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Другие города</span><h2>{isFree ? "Ещё свободные города с высоким спросом" : "Свободные города рядом с сетью"}</h2></div>
+      <div class="grid g3">{near.map((x) => <a class="card lnk" href={`/goroda/${x.slug}/`}><h3>{x.city}</h3><p class="muted">{x.b2c} запросов ПП-доставки в месяц</p></a>)}</div>
+    </div>
+  </section>
+
+  <LeadForm city={isFree ? c.city : ""} source={"city-" + c.slug} title={isFree ? `Забронируйте ${c.city}, пока город свободен` : undefined} />
+</Base>
+<style>.ctas{display:flex;flex-wrap:wrap;gap:12px}.lnk{text-decoration:none}.lnk:hover h3{color:var(--red)}</style>

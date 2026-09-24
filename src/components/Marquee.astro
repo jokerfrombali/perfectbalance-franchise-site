@@ -1,0 +1,20 @@
+---
+// Бегущая лента блюд — реальные блюда и КБЖУ с текущего сайта perfectbalance.club.
+const D = [["Чизкейк ванильный с клубникой", 390], ["Творожник под персиковым конфитюром", 380], ["Отбивная в кунжутной панировке с овощами", 248], ["Морковное пирожное с фисташками", 368], ["Кефтедес в горчичном соусе с гречей", 379], ["Филе в соусе песто с овощным шашлычком", 195]];
+---
+<div class="mq" aria-label="Блюда из меню Perfect Balance">
+  <div class="track">
+    {[0, 1].map((k) => <div class="set" aria-hidden={k === 1 ? "true" : undefined}>{D.map(([n, c]) => <span class="it"><b>{n}</b><i>{c} ккал</i></span>)}</div>)}
+  </div>
+</div>
+<style>
+  .mq{background:var(--red);color:#fff;overflow:hidden;padding-block:16px;border-block:1px solid #a30b00}
+  .track{display:flex;width:max-content;animation:run 45s linear infinite}
+  .mq:hover .track{animation-play-state:paused}
+  .set{display:flex}
+  .it{display:inline-flex;align-items:center;gap:12px;padding-inline:28px;font-size:16px;white-space:nowrap}
+  .it::after{content:"";width:6px;height:6px;background:#fff;border-radius:50%;margin-left:28px}
+  .it i{font-style:normal;font-weight:800;background:#fff;color:var(--red);padding:2px 8px;font-size:13px}
+  @keyframes run{to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.track{animation:none;flex-wrap:wrap}}
+</style>

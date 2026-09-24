@@ -1,0 +1,24 @@
+---
+// Заглушка видео основателя. TODO: заменить src на ролик (VK Видео / Rutube / mp4), имя и фото основателя.
+import { FACTS } from "../data/facts";
+---
+<div class="fv">
+  <div class="screen">
+    <img src="/img/pack.webp" alt="" loading="lazy" />
+    <button type="button" class="play" aria-label="Видео обращение основателя — скоро" disabled><span></span></button>
+    <span class="soon">Видео готовится</span>
+  </div>
+  <div class="cap">
+    <b>{FACTS.founder.name ?? "Основатель Perfect Balance"}</b>
+    <span>«Почему за {new Date().getFullYear() - FACTS.since} лет у нас закрылись только {FACTS.closed} точки и кому мы откажем в франшизе» — 90 секунд</span>
+  </div>
+</div>
+<style>
+  .fv{display:grid;gap:14px}
+  .screen{position:relative;aspect-ratio:16/10;background:#111;overflow:hidden;max-width:100%}
+  .screen img{width:100%;height:100%;object-fit:cover;opacity:.45;filter:grayscale(.3)}
+  .play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;background:var(--red);border:0;display:grid;place-items:center;cursor:not-allowed}
+  .play span{width:0;height:0;border-left:24px solid #fff;border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
+  .soon{position:absolute;left:16px;bottom:14px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#fff;color:#111;padding:5px 10px}
+  .cap{display:grid;gap:4px}.cap span{font-size:14px;color:#a9a9a9}
+</style>

@@ -1,0 +1,45 @@
+---
+import { FACTS } from "../data/facts";
+import hubs from "../data/hubs.json";
+---
+<footer class="ftr">
+  <div class="wrap cols">
+    <div class="brand">
+      <img src="/img/logo.svg" alt="Perfect Balance" width="118" height="40" />
+      <p class="muted">Франшиза доставки правильного питания по подписке. Работаем с {FACTS.since} года, {FACTS.cities} города в сети.</p>
+    </div>
+    <div>
+      <h4>Франшиза</h4>
+      <a href="/franshiza/">Условия и что входит</a><a href="/stoimost/">Стоимость и инвестиции</a><a href="/kalkulyator/">Калькулятор дохода</a>
+      <a href="/ekonomicheskaya-model/">Экономическая модель</a><a href="/otbor-partnerov/">Отбор партнёров</a><a href="/sravnenie-franshiz/">Сравнение франшиз ПП</a><a href="/faq/">Вопросы и ответы</a>
+    </div>
+    <div>
+      <h4>Компания</h4>
+      <a href="/osnovatel/">Основатель</a><a href="/keysy/">Кейсы партнёров</a><a href="/goroda/">Города сети</a><a href="/menu-i-ttk/">Меню и ТТК</a>
+      <a href="/marketing-podderzhka/">Маркетинг</a><a href="/crm-i-operacii/">CRM и поддержка</a><a href="/rynok/">Рынок ПП</a>
+    </div>
+    <div>
+      <h4>Блог</h4>
+      {hubs.map((h) => <a href={`/blog/${h.slug}/`}>{h.name}</a>)}
+    </div>
+    <div>
+      <h4>Связаться</h4>
+      <p class="num">{FACTS.phone}</p>
+      <p>WhatsApp: <span class="num">{FACTS.whatsapp}</span></p>
+      <p>Telegram: {FACTS.telegram}</p>
+      <a href="/kontakty/">Все контакты</a>
+    </div>
+  </div>
+  <div class="wrap legal muted">© {FACTS.since}–{new Date().getFullYear()} Perfect Balance. Данные о доходности — ориентир на основе показателей сети, не публичная оферта.</div>
+</footer>
+<style>
+  .ftr{background:var(--black);color:#fff;padding-block:64px 32px}
+  .cols{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:32px}
+  .brand{display:grid;gap:16px;align-content:start}
+  .ftr .muted{color:#9A9A9A;font-size:14px}
+  h4{margin:0 0 12px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#9A9A9A}
+  .cols > div{display:flex;flex-direction:column;gap:8px;font-size:14px}
+  .cols a{text-decoration:none;opacity:.9}.cols a:hover{color:var(--red);opacity:1}
+  .legal{margin-top:48px;padding-top:24px;border-top:1px solid #222;font-size:12px}
+  @media (max-width:900px){.cols{grid-template-columns:1fr 1fr}.brand{grid-column:1/-1}}
+</style>

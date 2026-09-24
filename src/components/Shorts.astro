@@ -1,0 +1,67 @@
+---
+// Вертикальные ролики 9:16. Пока роликов нет — обложка из фото сайта и плашка «скоро».
+// Когда ролик готов: указать src (mp4 до 8 МБ, 1080×1920, без звука по умолчанию) — он будет играть без звука по наведению/тапу.
+const SHORTS = [
+  { t: "Как собирается дневной рацион", d: "Кухня изнутри · 30 сек", poster: "/img/spread.webp", src: "" },
+  { t: "Основатель: почему закрылись только 3 точки", d: "Обращение · 60 сек", poster: "/img/pack.webp", src: "" },
+  { t: "День партнёра: от заказа до доставки", d: "Партнёр сети · 45 сек", poster: "/img/hero-bag.webp", src: "" },
+  { t: "Что внутри пакета клиента", d: "Распаковка · 20 сек", poster: "/img/boxes.webp", src: "" },
+  { t: "Сколько зарабатывает точка", d: "Цифры партнёра · 40 сек", poster: "/img/partner-site.webp", src: "" },
+];
+---
+<section class="section dark shorts-sec">
+  <div class="wrap">
+    <div class="head row">
+      <div><span class="eyebrow">Смотрите изнутри</span><h2>Бизнес Perfect Balance <span class="mark">за 30 секунд</span></h2></div>
+      <div class="nav"><button type="button" data-dir="-1" aria-label="Назад">←</button><button type="button" data-dir="1" aria-label="Вперёд">→</button></div>
+    </div>
+  </div>
+  <div class="rail" data-rail tabindex="0" aria-label="Короткие видео">
+    {SHORTS.map((s) => (
+      <article class="short">
+        {s.src ? <video src={s.src} poster={s.poster} muted loop playsinline preload="none"></video> : <img src={s.poster} alt="" loading="lazy" />}
+        <div class="shade"></div>
+        <span class="play" aria-hidden="true"></span>
+        {!s.src && <span class="soon">скоро</span>}
+        <div class="cap"><b>{s.t}</b><span>{s.d}</span></div>
+        <div class="bar"><i></i></div>
+      </article>
+    ))}
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-rail]").forEach((rail) => {
+    rail.closest("section")!.querySelectorAll<HTMLButtonElement>("[data-dir]").forEach((b) =>
+      b.addEventListener("click", () => rail.scrollBy({ left: Number(b.dataset.dir) * rail.clientWidth * 0.7, behavior: "smooth" })));
+    rail.querySelectorAll("video").forEach((v) => {
+      const card = v.closest(".short")!;
+      card.addEventListener("mouseenter", () => v.play().catch(() => {}));
+      card.addEventListener("mouseleave", () => v.pause());
+      card.addEventListener("click", () => (v.paused ? v.play().catch(() => {}) : v.pause()));
+    });
+  });
+</script>
+<style>
+  .shorts-sec{overflow:hidden}
+  .row{display:flex;justify-content:space-between;align-items:end;gap:20px;max-width:none}
+  .nav{display:flex;gap:8px}
+  .nav button{width:52px;height:52px;border:1.5px solid #fff;background:transparent;color:#fff;font-size:20px;cursor:pointer;transition:background .2s,color .2s}
+  .nav button:hover{background:#fff;color:#000}
+  .rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--g) 8px;padding-left:max(var(--g),calc((100vw - var(--w))/2 + var(--g)));scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .short{position:relative;flex:0 0 clamp(220px,24vw,290px);aspect-ratio:9/16;scroll-snap-align:start;overflow:hidden;background:#1a1a1a;cursor:pointer}
+  .short img,.short video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .short:hover img,.short:hover video{transform:scale(1.06)}
+  .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 40%,rgba(0,0,0,.85))}
+  .play{position:absolute;top:50%;left:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:var(--red);transition:transform .25s}
+  .play::after{content:"";position:absolute;left:26px;top:20px;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
+  .short:hover .play{transform:scale(1.12)}
+  .soon{position:absolute;top:14px;left:14px;background:#fff;color:#111;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px}
+  .cap{position:absolute;left:16px;right:16px;bottom:26px;display:grid;gap:4px}
+  .cap b{font-size:17px;line-height:1.25}.cap span{font-size:12px;color:#cfcfcf}
+  .bar{position:absolute;left:16px;right:16px;bottom:12px;height:3px;background:rgba(255,255,255,.25)}
+  .bar i{display:block;height:100%;width:0;background:#fff}
+  .short:hover .bar i{animation:prog 6s linear infinite}
+  @keyframes prog{to{width:100%}}
+  @media (prefers-reduced-motion:reduce){.short:hover .bar i{animation:none}.short img{transition:none}}
+</style>

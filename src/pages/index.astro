@@ -1,0 +1,175 @@
+---
+import Base from "../layouts/Base.astro";
+import Calculator from "../components/Calculator.astro";
+import FounderVideo from "../components/FounderVideo.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Shorts from "../components/Shorts.astro";
+import Marquee from "../components/Marquee.astro";
+import Hero from "../components/Hero.astro";
+import Includes from "../components/Includes.astro";
+import { FACTS, BUDGET, rub } from "../data/facts";
+import free from "../data/cities_free.json";
+import net from "../data/cities_net.json";
+const total = BUDGET.reduce((s, b) => s + b.sum, 0);
+const topFree = free.filter((c) => c.tier === "A").slice(0, 8);
+const years = new Date().getFullYear() - FACTS.since;
+const includes = [
+  ["Меню и техкарты", "840 блюд в год с КБЖУ и ТТК. Ротация каждые 2,5 месяца — клиент не устаёт от меню."],
+  ["Сайт и CRM", "Готовый сайт с калькулятором рациона на поддомене вашего города и CRM для заказов."],
+  ["Приложение для учёта", "Заказы, клиенты, логистика и выручка в одном окне."],
+  ["Реклама под ключ", "Подрядчики ведут соцсети и Яндекс Директ по отработанным кампаниям."],
+  ["Блогеры", "Научим привлекать клиентов через лидеров мнений вашего города."],
+  ["Контент", "Фото, баннеры, сертификаты — всё для рекламы с первого дня."],
+  ["Помещение", "Поможем найти помещение и расставить оборудование по проекту."],
+  ["39 файлов базы знаний", "Инструкции, скрипты продаж, договоры, регламенты."],
+  ["Офлайн-продвижение", "Материалы и консультации по наружной рекламе и партнёрствам."],
+  ["Поддержка", "Найм, бухгалтерия, управление — отвечаем на вопросы на каждом этапе."],
+];
+const steps = [
+  ["Заявка и знакомство", "Созваниваемся, рассказываем о модели, отвечаем на вопросы."],
+  ["Анализ вашего города", "Собираем статистику спроса и конкурентов и честно говорим, стоит ли запускаться."],
+  ["Договор", "Договор коммерческой концессии: 33 пункта и приложение с перечнем всего, что входит."],
+  ["Помещение и кухня", "Подбираем помещение, закупаем оборудование, делаем ремонт."],
+  ["Команда и обучение", "Нанимаете повара и администратора, мы обучаем по техкартам и регламентам."],
+  ["Запуск продаж", "Включаем сайт, CRM и рекламу. Первые клиенты — с первого дня работы."],
+];
+const faq = [
+  ["Нужен ли опыт в общепите?", "Нет. Важнее базовая техническая грамотность и готовность работать в первые месяцы. Опыт в любом бизнесе — плюс, даже неудачный."],
+  ["Сколько человек нужно на старте?", "Двое: повар и администратор. Курьеров в штат не берём — работаем с курьерскими службами."],
+  ["С каких городов вы начинаете?", "От 150 тысяч жителей. Есть успешная точка и в городе на 75 тысяч с высоким доходом жителей, но это решаем индивидуально."],
+  ["Какое роялти?", "Условия по роялти пришлём вместе с экономической моделью."],
+];
+---
+<Base title="Франшиза доставки правильного питания Perfect Balance — окупаемость 10–14 месяцев" description={`Франшиза доставки ПП-питания по подписке: паушальный взнос от 350 000 ₽, окупаемость 10–14 месяцев, маржинальность 26%. ${FACTS.cities} города сети, работаем с ${FACTS.since} года. Калькулятор дохода.`}>
+  <Hero />
+  <Marquee />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Кому подходит</span><h2>Франшиза для тех, кто устал работать на чужого дядю</h2></div>
+      <div class="grid g3">
+        <div class="card"><h3>Хотите доход выше зарплаты</h3><p class="muted">Цель — 200–300 тысяч рублей в месяц со своего дела, а не повышение раз в два года.</p></div>
+        <div class="card"><h3>Не готовы рисковать всем</h3><p class="muted">Вход от ~1,1 млн ₽ со всеми расходами и резервом — в 2–5 раз ниже, чем у франшиз кафе ПП.</p></div>
+        <div class="card"><h3>Нет опыта в общепите</h3><p class="muted">Меню, техкарты, скрипты, реклама и CRM уже есть. Ваша задача — управлять, а не изобретать.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="calc">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Сколько клиентов нужно, чтобы зарабатывать <span class="mark">столько, сколько вы хотите</span></h2><p class="muted">Выберите желаемый доход и город — посчитаем выручку, расходы и срок окупаемости на показателях сети.</p></div>
+      <Calculator compact />
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap grid g2 trust">
+      <div class="t-txt">
+        <span class="eyebrow">Почему это надёжно</span>
+        <h2>{years} лет на рынке и только {FACTS.closed} закрытые точки</h2>
+        <p class="muted">Мы не продаём франшизу всем желающим. Сначала анализируем ваш город и говорим честно, стоит ли запускаться. Поэтому у нас нет текучки.</p>
+        <div class="grid g2 mini">
+          <div class="stat"><b class="num">{FACTS.netProfit2021}</b><span>общая прибыль сети за 2021 год</span></div>
+          <div class="stat"><b>10–14 мес.</b><span>выход в прибыль в городах как Магнитогорск и Набережные Челны</span></div>
+        </div>
+        <a class="btn ghost" href="/osnovatel/">Об основателе и истории сети</a>
+      </div>
+      <FounderVideo />
+    </div>
+  </section>
+  <Shorts />
+
+  <section class="section">
+    <div class="wrap grid g2 how">
+      <img src="/img/boxes.webp" alt="Дневной рацион Perfect Balance в контейнерах" width="1000" height="749" loading="lazy" />
+      <div class="t-txt">
+        <span class="eyebrow">Как работает бизнес</span>
+        <h2>Клиент платит вперёд за 1–30 дней питания</h2>
+        <ul class="checks">
+          <li>Клиент выбирает рацион и калорийность: Slim Balance 950–2050 ккал, Athletic Balance 2475 и 3150 ккал, веган и детокс.</li>
+          <li>Оплата за весь период сразу — у вас нет дебиторки.</li>
+          <li>Привозим еду на 1–2 дня: пронумерованные контейнеры, приборы, меню.</li>
+          <li>Дневной рацион стоит {FACTS.priceDay} — клиент экономит 80–100 часов в месяц на готовке.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Includes />
+
+  <section class="section">
+    <div class="wrap grid g2">
+      <div class="t-txt">
+        <span class="eyebrow">Сколько стоит</span>
+        <h2>Полная смета запуска — без скрытых платежей</h2>
+        <p class="muted">Пример для города около 400 тысяч жителей. Для городов больше 700 тысяч паушальный взнос — 450 000 ₽, Москва и Санкт-Петербург — индивидуально.</p>
+        <a class="btn" href="/stoimost/">Подробно о стоимости</a>
+      </div>
+      <div class="table-wrap"><table>
+        <tbody>{BUDGET.map((b) => <tr><td>{b.item}</td><td class="r">{rub(b.sum)}</td></tr>)}</tbody>
+        <tfoot><tr class="us"><td>Итого с резервом</td><td class="r">{rub(total)}</td></tr></tfoot>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Сравнение</span><h2>Perfect Balance и другие франшизы ПП</h2><p class="muted">Данные с открытых сайтов франшиз, сентябрь 2026.</p></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Франшиза</th><th class="r">Паушальный взнос</th><th class="r">Вложения</th><th>Окупаемость</th><th>Калькулятор</th></tr></thead>
+        <tbody>
+          <tr class="us"><td>Perfect Balance</td><td class="r">350–450 тыс. ₽</td><td class="r">~1,1 млн ₽ с резервом</td><td>10–14 мес.</td><td>есть</td></tr>
+          <tr><td>WILL FOOD</td><td class="r">500 тыс. ₽</td><td class="r">от 1,5 млн ₽</td><td>~12 мес.</td><td>есть</td></tr>
+          <tr><td>Vdiet</td><td class="r">390–450 тыс. ₽</td><td class="r">0,9–2 млн ₽</td><td>9–12 мес.</td><td>есть</td></tr>
+          <tr><td>IDEAL DAY</td><td class="r">1,5 млн ₽</td><td class="r">от 2,5 млн ₽</td><td>не указано</td><td>нет</td></tr>
+          <tr><td>PRIME</td><td class="r">1,5 млн ₽</td><td class="r">6,25 млн ₽</td><td>12–18 мес.</td><td>нет</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:22px"><a class="btn ghost" href="/sravnenie-franshiz/">Полное сравнение 9 франшиз</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Запуск</span><h2>Шесть шагов от заявки до первых клиентов</h2></div>
+      <ol class="steps grid g3">{steps.map(([t, d], i) => <li class="card"><span class="n">{i + 1}</span><h3>{t}</h3><p class="muted">{d}</p></li>)}</ol>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Города</span><h2>Где мы ищем партнёров в первую очередь</h2><p class="muted">В этих городах высокий спрос на доставку правильного питания по данным Яндекса, а сети Perfect Balance пока нет.</p></div>
+      <div class="cities">{topFree.map((c) => <a href={`/goroda/${c.slug}/`} class="city"><b>{c.city}</b><span>{c.b2c} запросов ПП-доставки в месяц</span></a>)}</div>
+      <p class="muted" style="margin-top:24px">Уже работаем: {net.map((c) => c.city).join(", ")}.</p>
+      <p style="margin-top:20px"><a class="btn ghost" href="/goroda/">Все города</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Вопросы</span><h2>Частые вопросы</h2></div>
+      <div class="faq">{faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div>
+      <p style="margin-top:22px"><a class="btn ghost" href="/faq/">Все вопросы</a></p>
+    </div>
+  </section>
+
+  <LeadForm source="home" />
+</Base>
+
+<style>
+  .t-txt{display:grid;gap:20px;align-content:center}
+  .trust{align-items:center}
+  .mini{gap:20px}
+  .mini .stat b{font-size:clamp(24px,2.6vw,32px)}
+  .how img{width:100%;object-fit:cover}
+  .steps{list-style:none;padding:0;margin:0}
+  .steps .n{font-size:40px;font-weight:800;color:var(--red);line-height:1}
+  .cities{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:#262626;border:1px solid #262626}
+  .city{background:var(--black);padding:22px;text-decoration:none;display:grid;gap:6px;transition:background .15s}
+  .city:hover{background:#1a1a1a}.city b{font-size:19px}.city span{font-size:13px;color:#a9a9a9}
+  .faq{display:grid;border-top:1px solid var(--line);max-width:880px}
+  .faq details{border-bottom:1px solid var(--line);padding:18px 0}
+  .faq summary{cursor:pointer;font-weight:700;font-size:17px}
+  .faq p{margin-top:10px;color:var(--muted)}
+  
+</style>

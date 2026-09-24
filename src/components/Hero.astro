@@ -1,0 +1,138 @@
+---
+// Первый экран главной: текст + коллаж из фото + мини-калькулятор «сколько клиентов нужно».
+// Формула мини-калькулятора совпадает с основным калькулятором при значениях по умолчанию (чек 750 ₽, продукты 35%, упаковка 60 ₽, курьер 150 ₽ на 2 дня, постоянные 210 000 ₽).
+import { FACTS } from "../data/facts";
+const years = new Date().getFullYear() - FACTS.since;
+---
+<section class="hero">
+  <div class="bg" aria-hidden="true"><div class="glow"></div><div class="grid-lines"></div><div class="giant">PERFECT BALANCE</div></div>
+  <div class="wrap hero-in">
+    <div class="h-txt">
+      <span class="badge"><span class="dot"></span>Работаем с {FACTS.since} года · {FACTS.cities} города</span>
+      <h1>Свой бизнес на&nbsp;доставке правильного питания <span class="mark">с окупаемостью <span style="white-space:nowrap">10–14 месяцев</span></span></h1>
+      <p class="lead">Для тех, кто хочет работать на себя и зарабатывать от 200 000 ₽ в месяц. Меню на 840 блюд, сайт, CRM и реклама — готовы с первого дня.</p>
+      <div class="ctas">
+        <a class="btn" href="#zayavka">Получить экономическую модель</a>
+        <a class="btn ghost" href="#calc">Подробный расчёт</a>
+      </div>
+      <ul class="trust">
+        <li><b>{FACTS.closed}</b> точки закрылись за {years} лет</li>
+        <li><b>от 350 тыс. ₽</b> паушальный взнос</li>
+        <li><b>2 человека</b> в штате на старте</li>
+      </ul>
+    </div>
+
+    <div class="collage">
+      <figure class="ph ph1"><img src="/img/spread.webp" alt="Дневные рационы Perfect Balance" width="796" height="1146" fetchpriority="high" /></figure>
+      <figure class="ph ph2"><img src="/img/boxes.webp" alt="Контейнеры с блюдами Perfect Balance" width="1000" height="749" /></figure>
+      <div class="tag t1"><b>26%</b><span>маржинальность сети</span></div>
+      <div class="tag t2"><b>840</b><span>блюд в меню за год</span></div>
+
+      <form class="mini" data-mini aria-label="Быстрый расчёт">
+        <span class="mini-k">Быстрый расчёт</span>
+        <label for="mini-goal">Хочу зарабатывать в месяц</label>
+        <output class="mini-goal num" data-o="goal">250 000 ₽</output>
+        <input id="mini-goal" type="range" min="100000" max="500000" step="10000" value="250000" />
+        <div class="mini-res">
+          <div><b class="num" data-o="cl">44</b><span>клиента в день</span></div>
+          <div><b class="num" data-o="pb">11</b><span>мес. окупаемость</span></div>
+        </div>
+        <a href="#calc" class="mini-link">Настроить под мой город →</a>
+      </form>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="wrap strip-in">
+      <div><b class="num" data-count="117">117</b><span>млн ₽ прибыли сети за 2021</span></div>
+      <div><b class="num"><span data-count="26">26</span>%</b><span>средняя маржинальность</span></div>
+      <div><b class="num" data-count={FACTS.cities}>{FACTS.cities}</b><span>города в сети</span></div>
+      <div><b class="num">1–30</b><span>дней подписки, оплата вперёд</span></div>
+    </div>
+  </div>
+</section>
+<script>
+  const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n) + " ₽";
+  document.querySelectorAll<HTMLFormElement>("[data-mini]").forEach((f) => {
+    const r = f.querySelector("input")!, o = (k: string) => f.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
+    const perClient = 30 * (750 * (1 - 0.35) - 60 - 75), fixed = 210000, inv = 350000 + 150000 + 200000 + 27000 + 30000 + 150000 + 200000;
+    const calc = () => {
+      const goal = Number(r.value), cl = Math.ceil((goal + fixed) / perClient);
+      let cum = -inv, m = 0; while (cum < 0 && m < 60) { m++; cum += cl * Math.min(1, m / 8) * perClient - fixed; }
+      o("goal").textContent = fmt(goal); o("cl").textContent = String(cl); o("pb").textContent = String(m);
+      r.style.setProperty("--p", ((goal - 100000) / 400000) * 100 + "%");
+    };
+    r.addEventListener("input", calc); f.addEventListener("submit", (e) => e.preventDefault()); calc();
+  });
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll<HTMLElement>(".hero [data-count]").forEach((el) => {
+      const to = Number(el.dataset.count), t0 = performance.now();
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / 1400); el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+  }
+</script>
+<style>
+  .hero{position:relative;overflow:hidden;background:var(--black);color:#fff}
+  .bg{position:absolute;inset:0;pointer-events:none}
+  .glow{position:absolute;right:-10%;top:-20%;width:70%;height:120%;background:radial-gradient(closest-side,rgba(199,13,0,.38),transparent);filter:blur(20px);animation:breathe 9s ease-in-out infinite alternate}
+  .grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(180deg,#000,transparent 85%)}
+  .giant{position:absolute;left:0;bottom:92px;white-space:nowrap;font-weight:800;font-size:clamp(90px,14vw,210px);line-height:.8;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.09);animation:slide 40s linear infinite alternate}
+  @keyframes breathe{to{transform:translate(-6%,6%) scale(1.1)}}
+  @keyframes slide{to{transform:translateX(-25%)}}
+  .hero-in{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,3vw,48px);align-items:center;padding-block:clamp(32px,4.5vw,64px) clamp(48px,5vw,80px)}
+  .h-txt{display:grid;gap:20px}
+  .badge{display:inline-flex;align-items:center;gap:10px;width:max-content;max-width:100%;font-size:13px;font-weight:600;padding:8px 14px;border:1px solid #333;background:rgba(255,255,255,.04)}
+  .dot{width:8px;height:8px;border-radius:50%;background:#2BB36A;box-shadow:0 0 0 0 rgba(43,179,106,.6);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(43,179,106,0)}100%{box-shadow:0 0 0 0 rgba(43,179,106,0)}}
+  h1{font-size:clamp(32px,3.6vw,52px);letter-spacing:-.01em;max-width:15em}
+  .lead{font-size:clamp(16px,1.4vw,19px);color:#cfcfcf;max-width:52ch}
+  .ctas{display:flex;flex-wrap:wrap;gap:12px}
+  .trust{list-style:none;margin:0;padding:18px 0 0;border-top:1px solid #262626;display:flex;flex-wrap:wrap;gap:10px 28px;font-size:14px;color:#a9a9a9}
+  .trust b{color:#fff}
+  /* коллаж */
+  .collage{position:relative;height:clamp(460px,44vw,600px)}
+  .ph{position:absolute;margin:0;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6)}
+  .ph img{width:100%;height:100%;object-fit:cover}
+  .ph1{right:0;top:0;width:68%;height:88%}
+  .ph1 img{animation:kb 24s ease-in-out infinite alternate}
+  .ph2{left:0;bottom:4%;width:48%;height:40%;border:6px solid var(--black)}
+  @keyframes kb{to{transform:scale(1.12) translate(-3%,-2%)}}
+  .tag{position:absolute;display:grid;padding:12px 16px;background:#fff;color:#111;box-shadow:0 18px 40px rgba(0,0,0,.4);animation:float 6s ease-in-out infinite}
+  .tag b{font-size:24px;font-weight:800;line-height:1}.tag span{font-size:12px;color:#626262}
+  .t1{right:-6px;top:52%;background:var(--red);color:#fff;animation-delay:-3s}.t1 span{color:#ffd9d6}
+  .t2{left:12%;top:8%}
+  @keyframes float{50%{transform:translateY(-10px)}}
+  /* мини-калькулятор */
+  .mini{position:absolute;left:4%;top:24%;width:min(300px,62%);background:rgba(18,18,18,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #333;padding:20px;display:grid;gap:8px;z-index:2}
+  .mini-k{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+  .mini label{font-size:13px;color:#bdbdbd}
+  .mini-goal{font-size:26px;font-weight:800}
+  .mini input{--p:37.5%;appearance:none;-webkit-appearance:none;height:6px;background:linear-gradient(90deg,var(--red) var(--p),#3a3a3a var(--p));outline-offset:6px}
+  .mini input::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--red);cursor:grab}
+  .mini input::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--red);cursor:grab}
+  .mini-res{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .mini-res div{background:#fff;color:#111;padding:10px 12px;display:grid}
+  .mini-res b{font-size:28px;font-weight:800;line-height:1}.mini-res span{font-size:12px;color:#626262}
+  .mini-link{font-size:13px;font-weight:700;text-decoration:none;color:#fff;margin-top:4px}.mini-link:hover{color:var(--red)}
+  /* полоса цифр */
+  .strip{position:relative;border-top:1px solid #222;background:rgba(255,255,255,.02)}
+  .strip-in{display:grid;grid-template-columns:repeat(4,1fr)}
+  .strip-in div{padding:26px 20px;border-left:1px solid #222;display:grid;gap:4px}
+  .strip-in div:first-child{border-left:0;padding-left:0}
+  .strip b{font-size:clamp(28px,3vw,40px);font-weight:800;line-height:1}
+  .strip span{font-size:13px;color:#a9a9a9}
+  @media (max-width:980px){
+    .hero-in{grid-template-columns:1fr}
+    .collage{height:520px;max-width:560px;width:100%;margin-inline:auto}
+    .strip-in{grid-template-columns:1fr 1fr}.strip-in div:nth-child(3){border-left:0;padding-left:0}
+  }
+  @media (max-width:520px){
+    .collage{height:auto;display:grid;gap:12px}
+    .ph,.tag,.mini{position:static;width:auto;height:auto}
+    .ph1{height:320px}.ph2,.tag{display:none}
+    .mini{order:-1}
+    .giant{bottom:auto;top:20px}
+  }
+  @media (prefers-reduced-motion:reduce){.glow,.giant,.ph1 img,.tag,.dot{animation:none}}
+</style>

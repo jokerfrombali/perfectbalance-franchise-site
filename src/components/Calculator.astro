@@ -1,0 +1,141 @@
+---
+// Калькулятор окупаемости. Значения по умолчанию — ориентиры сети с сайта; помеченные «уточнить» — допущения до получения данных от компании.
+import free from "../data/cities_free.json";
+import net from "../data/cities_net.json";
+interface Props { city?: string; compact?: boolean; price?: number; rent?: number; priceNote?: string }
+const { city = "", compact = false, price = 750, rent = 30000, priceNote = "По сети — 550–900 ₽ в день в зависимости от рациона" } = Astro.props;
+const cities = [...free.map((c) => ({ n: c.city, p: c.pop, s: "free" })), ...net.map((c) => ({ n: c.city, p: c.pop, s: "net" }))].sort((a, b) => a.n.localeCompare(b.n, "ru"));
+---
+<div class="calc" data-calc>
+  <div class="ins">
+    <div class="mode" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-mode="goal">Хочу зарабатывать</button>
+      <button type="button" role="tab" aria-selected="false" data-mode="clients">Знаю число клиентов</button>
+    </div>
+    <div class="f" data-show="goal">
+      <label for="c-goal">Желаемый доход в месяц <output data-o="goal"></output></label>
+      <input id="c-goal" type="range" min="100000" max="600000" step="10000" value="250000" data-k="goal" />
+    </div>
+    <div class="f" data-show="clients" hidden>
+      <label for="c-cl">Клиентов в день <output data-o="clients"></output></label>
+      <input id="c-cl" type="range" min="10" max="150" step="1" value="45" data-k="clients" />
+    </div>
+    <div class="f">
+      <label for="c-city">Город</label>
+      <select id="c-city" data-k="city">
+        <option value="400">Другой город (~400 тыс. жителей)</option>
+        {cities.map((c) => <option value={c.p} selected={c.n === city}>{c.n}{c.s === "net" ? " — сеть уже работает" : ""}</option>)}
+      </select>
+    </div>
+    <div class="f">
+      <label for="c-price">Средний чек за день питания <output data-o="price"></output></label>
+      <input id="c-price" type="range" min="550" max="1800" step="10" value={price} data-k="price" />
+      <small>{priceNote}</small>
+    </div>
+    <details class="more" open={!compact}>
+      <summary>Расходы точки</summary>
+      <div class="f2">
+        <label>Продукты, % от выручки <span class="todo">уточнить</span><input type="number" data-k="food" value="35" min="20" max="60" /></label>
+        <label>Упаковка на рацион, ₽<input type="number" data-k="pack" value="60" min="0" /></label>
+        <label>Курьер за доставку, ₽ <small>(привозим на 2 дня)</small><input type="number" data-k="deliv" value="150" min="0" /></label>
+        <label>Аренда в месяц, ₽<input type="number" data-k="rent" value={rent} min="0" step="1000" /></label>
+        <label>Зарплаты: повар + админ, ₽<input type="number" data-k="staff" value="110000" min="0" step="5000" /></label>
+        <label>Реклама в месяц, ₽<input type="number" data-k="mkt" value="50000" min="0" step="5000" /></label>
+        <label>Роялти, % от выручки <span class="todo">уточнить</span><input type="number" data-k="roy" value="0" min="0" max="15" step="0.5" /></label>
+        <label>Прочее (связь, CRM, коммуналка), ₽<input type="number" data-k="other" value="20000" min="0" step="1000" /></label>
+        <label>Ваша зарплата сейчас, ₽<input type="number" data-k="salary" value="80000" min="0" step="5000" /></label>
+      </div>
+    </details>
+  </div>
+  <div class="out" aria-live="polite">
+    <div class="hero-n">
+      <span data-r="headLabel">Нужно клиентов в день</span>
+      <b data-r="head" class="num">—</b>
+    </div>
+    <dl>
+      <div><dt>Выручка в месяц</dt><dd data-r="rev" class="num">—</dd></div>
+      <div><dt>Расходы в месяц</dt><dd data-r="cost" class="num">—</dd></div>
+      <div><dt>Прибыль в месяц</dt><dd data-r="profit" class="num">—</dd></div>
+      <div><dt>Рентабельность</dt><dd data-r="margin" class="num">—</dd></div>
+      <div><dt>Вложения на старт</dt><dd data-r="inv" class="num">—</dd></div>
+      <div><dt>Окупаемость</dt><dd data-r="payback" class="num">—</dd></div>
+    </dl>
+    <div class="vs">
+      <div><span>Зарплата в найме</span><i data-r="barSal"></i><b data-r="sal" class="num"></b></div>
+      <div><span>Доход с точки</span><i class="red" data-r="barInc"></i><b data-r="inc" class="num"></b></div>
+    </div>
+    <p class="note">Расчёт — ориентир. Первые месяцы клиенты набираются постепенно: в окупаемости заложен выход на плановое число клиентов за 8 месяцев. Точную модель для вашего города пришлём по заявке.</p>
+    <a class="btn" href="#zayavka">Получить точный расчёт для города</a>
+  </div>
+</div>
+<script>
+  const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(Math.round(n)) + " ₽";
+  document.querySelectorAll<HTMLElement>("[data-calc]").forEach((root) => {
+    let mode = "goal";
+    const v = (k: string) => Number((root.querySelector(`[data-k="${k}"]`) as HTMLInputElement).value) || 0;
+    const set = (k: string, t: string) => { const el = root.querySelector(`[data-r="${k}"]`); if (el) el.textContent = t; };
+    const out = (k: string, t: string) => { const el = root.querySelector(`[data-o="${k}"]`); if (el) el.textContent = t; };
+    function calc() {
+      const price = v("price"), food = v("food") / 100, roy = v("roy") / 100, pack = v("pack"), deliv = v("deliv");
+      const fixed = v("rent") + v("staff") + v("mkt") + v("other");
+      const perClient = 30 * (price * (1 - food - roy) - pack - deliv / 2); // маржинальный доход с клиента в месяц
+      const pop = v("city");
+      const fee = pop >= 700 ? 450000 : 350000;
+      const inv = fee + 150000 + 200000 + 27000 + v("rent") + 150000 + 200000;
+      let clients: number;
+      if (mode === "goal") { clients = perClient > 0 ? Math.ceil((v("goal") + fixed) / perClient) : 0; }
+      else clients = v("clients");
+      const rev = clients * price * 30, profit = clients * perClient - fixed, cost = rev - profit;
+      // окупаемость: линейный выход на плановое число клиентов за 8 мес.
+      let cum = -inv, m = 0;
+      while (cum < 0 && m < 60) { m++; const c = clients * Math.min(1, m / 8); cum += c * perClient - fixed; }
+      set("headLabel", mode === "goal" ? "Нужно клиентов в день" : "Прибыль в месяц");
+      set("head", mode === "goal" ? String(clients) : fmt(profit));
+      set("rev", fmt(rev)); set("cost", fmt(cost)); set("profit", fmt(profit));
+      set("margin", rev > 0 ? Math.round((profit / rev) * 100) + "%" : "—");
+      set("inv", fmt(inv)); set("payback", m >= 60 ? "более 5 лет" : `${m} мес.`);
+      const sal = v("salary"), inc = Math.max(0, profit), mx = Math.max(sal, inc, 1);
+      set("sal", fmt(sal)); set("inc", fmt(inc));
+      (root.querySelector('[data-r="barSal"]') as HTMLElement).style.width = (sal / mx) * 100 + "%";
+      (root.querySelector('[data-r="barInc"]') as HTMLElement).style.width = (inc / mx) * 100 + "%";
+      out("goal", fmt(v("goal"))); out("clients", String(v("clients"))); out("price", fmt(price));
+    }
+    root.querySelectorAll("input,select").forEach((el) => el.addEventListener("input", calc));
+    root.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((b) => b.addEventListener("click", () => {
+      mode = b.dataset.mode!;
+      root.querySelectorAll("[data-mode]").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+      root.querySelectorAll<HTMLElement>("[data-show]").forEach((x) => (x.hidden = x.dataset.show !== mode));
+      calc();
+    }));
+    calc();
+  });
+</script>
+<style>
+  .calc{display:grid;grid-template-columns:1.05fr 1fr;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .ins{padding:clamp(20px,3vw,36px);display:grid;gap:22px;align-content:start}
+  .mode{display:flex;border:1.5px solid var(--ink)}
+  .mode button{flex:1;font:700 14px var(--f);padding:12px;border:0;background:#fff;color:var(--ink);cursor:pointer}
+  .mode button[aria-selected="true"]{background:var(--ink);color:#fff}
+  .f{display:grid;gap:10px}
+  .f label{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:14px}
+  output{font-weight:800;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--red)}
+  select,.f2 input{font:500 15px var(--f);padding:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);width:100%}
+  small{font-size:12px;color:var(--muted);font-weight:500}
+  .more summary{cursor:pointer;font-weight:700;font-size:14px}
+  .f2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .f2 label{display:grid;gap:6px;font-size:13px;font-weight:600}
+  .out{background:var(--black);color:#fff;padding:clamp(20px,3vw,36px);display:grid;gap:22px;align-content:start}
+  .hero-n span{font-size:14px;color:#aaa}
+  .hero-n b{display:block;font-size:clamp(48px,6vw,76px);font-weight:800;line-height:1;margin-top:6px}
+  dl{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;margin:0}
+  dt{font-size:12px;color:#9a9a9a;text-transform:uppercase;letter-spacing:.06em}
+  dd{margin:4px 0 0;font-size:20px;font-weight:700}
+  .vs{display:grid;gap:10px}
+  .vs div{display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:12px;font-size:13px}
+  .vs i{display:block;height:10px;background:#555;min-width:2px;transition:width .3s}
+  .vs i.red{background:var(--red)}
+  .note{font-size:12px;color:#9a9a9a}
+  @media (max-width:900px){.calc{grid-template-columns:1fr}}
+  @media (max-width:480px){.f2{grid-template-columns:1fr}.vs div{grid-template-columns:1fr auto}.vs i{grid-column:1/-1;order:3}}
+</style>

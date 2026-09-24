@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Calculator from "../components/Calculator.astro";
+import FounderVideo from "../components/FounderVideo.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { PAGES, type P } from "../data/pages";
+import { BUDGET, rub } from "../data/facts";
+export function getStaticPaths() { return PAGES.map((p) => ({ params: { page: p.slug }, props: { p } })); }
+const { p } = Astro.props as { p: P };
+const total = BUDGET.reduce((s, b) => s + b.sum, 0);
+const faqSchema = p.blocks.find((b) => b.t === "faq") as any;
+---
+<Base title={p.title} description={p.desc} schema={faqSchema ? { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqSchema.items.map(([q, a]: string[]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) } : undefined}>
+  <PageHero eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={[{ href: `/${p.slug}/`, label: p.eyebrow }]}>
+    <div class="ctas"><a class="btn" href="#zayavka">Получить экономическую модель</a></div>
+  </PageHero>
+  {p.blocks.map((b, i) => (
+    <section class:list={["section", { soft: i % 2 === 1 }]} id={b.t === "calc" ? "calc" : undefined}>
+      <div class="wrap">
+        {b.t === "text" && <div class="prose">{b.h && <h2>{b.h}</h2>}{b.p.map((x) => <p>{x}</p>)}</div>}
+        {b.t === "checks" && <><div class="head"><h2>{b.h}</h2></div><ul class="checks big">{b.items.map((x) => <li>{x}</li>)}</ul></>}
+        {b.t === "cards" && <><div class="head"><h2>{b.h}</h2></div><div class="grid g3">{b.items.map(([t, d]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p></div>)}</div></>}
+        {b.t === "table" && <><div class="head"><h2>{b.h}</h2></div><div class="table-wrap"><table><thead><tr>{b.head.map((h) => <th>{h}</th>)}</tr></thead><tbody>{b.rows.map((r, j) => <tr class:list={{ us: j === b.us }}>{r.map((c) => <td>{c}</td>)}</tr>)}</tbody></table></div>{b.note && <p class="muted" style="margin-top:14px;font-size:13px">{b.note}</p>}</>}
+        {b.t === "budget" && <><div class="head"><h2>Смета запуска</h2><p class="muted">Пример для города около 400 тысяч жителей.</p></div><div class="table-wrap"><table><thead><tr><th>Статья</th><th class="r">Сумма</th></tr></thead><tbody>{BUDGET.map((x) => <tr><td>{x.item}</td><td class="r">{rub(x.sum)}</td></tr>)}</tbody><tfoot><tr class="us"><td>Итого с резервом</td><td class="r">{rub(total)}</td></tr></tfoot></table></div></>}
+        {b.t === "calc" && <><div class="head"><h2>Калькулятор дохода</h2></div><Calculator /></>}
+        {b.t === "video" && <div class="vid"><FounderVideo /></div>}
+        {b.t === "cases" && <div class="grid g3">{[["Магнитогорск", "413 тыс. жителей"], ["Набережные Челны", "528 тыс. жителей"], ["Омск", "1,1 млн жителей"]].map(([c, pop]) => <div class="card"><h3>{c}</h3><p class="muted">{pop}</p><p>Срок окупаемости, выручка по месяцам и отзыв партнёра — после согласования с партнёром.</p><span class="todo">кейс уточняется</span></div>)}</div>}
+        {b.t === "faq" && <div class="faq">{b.items.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</div>}
+      </div>
+    </section>
+  ))}
+  <LeadForm source={p.slug} />
+</Base>
+<style>
+  .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .checks.big{font-size:18px;max-width:820px}
+  .vid{max-width:820px}
+  .vid :global(.cap span){color:var(--muted)}
+  .faq{display:grid;border-top:1px solid var(--line);max-width:880px}
+  .faq details{border-bottom:1px solid var(--line);padding:18px 0}
+  .faq summary{cursor:pointer;font-weight:700;font-size:17px}
+  .faq p{margin-top:10px;color:var(--muted)}
+</style>

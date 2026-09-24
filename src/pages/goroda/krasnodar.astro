@@ -1,0 +1,157 @@
+---
+// Эталонная страница города. Все цифры — Яндекс Вордстат (регион «Краснодар»), выдача Яндекса и сайты конкурентов на 24.09.2026.
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Calculator from "../../components/Calculator.astro";
+import LeadForm from "../../components/LeadForm.astro";
+import K from "../../data/krasnodar.json";
+import free from "../../data/cities_free.json";
+const c = free.find((x) => x.slug === "krasnodar")!;
+const near = free.filter((x) => ["rostov-na-donu", "sochi", "novorossiysk", "stavropol"].includes(x.slug));
+// график: индекс к среднему за 24 мес.
+const MONTHS = ["сен 24","окт","ноя","дек","янв 25","фев","мар","апр","май","июн","июл","авг","сен 25","окт","ноя","дек","янв 26","фев","мар","апр","май","июн","июл","авг 26"];
+const idx = (a: number[]) => { const m = a.reduce((s, x) => s + x, 0) / a.length; return a.map((x) => (x / m) * 100); };
+const s1 = idx(K.series["доставка правильного питания"]), s2 = idx(K.series["франшиза"]);
+const W = 720, H = 260, L = 44, R = 12, T = 14, B = 34, lo = 40, hi = 170;
+const x = (i: number) => L + (i * (W - L - R)) / 23, y = (v: number) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+const path = (s: number[]) => s.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+const dpp = K.series["доставка правильного питания"], yoy = Math.round(((dpp.slice(12).reduce((a, b) => a + b, 0) / dpp.slice(0, 12).reduce((a, b) => a + b, 0)) - 1) * 100);
+const maxB = Math.max(...K.brands.map((b) => b[1] as number));
+const faq = [
+  ["Свободен ли Краснодар?", "Да, на 24 сентября 2026 года точки Perfect Balance в Краснодаре нет. Один партнёр на город — бронь закрепляется после отбора и подписания договора."],
+  ["Какой паушальный взнос для Краснодара?", "450 000 ₽ — для городов с населением больше 700 тысяч жителей."],
+  ["Не слишком ли много конкурентов?", "В топ-10 Яндекса по доставке ПП в Краснодаре 9 сервисов, 7 из них — федеральные сети с ценой 1 350–2 700 ₽ в день. Это подтверждает, что люди в городе платят за готовое питание. Точка Perfect Balance может зайти в цене ниже премиальных сервисов при разнообразном меню на 840 блюд."],
+  ["Спрос падает — стоит ли заходить?", `Запросы о доставке ПП в Краснодаре за последний год на ${Math.abs(yoy)}% ниже предыдущего — так же, как по всей России. Но Краснодар остаётся городом №1 по спросу на 100 тысяч жителей. Рекомендуем стартовать к пику спроса — январю.`],
+];
+---
+<Base title="Франшиза доставки правильного питания в Краснодаре — Perfect Balance"
+  description="Франшиза ПП-доставки в Краснодаре: 417 запросов доставки правильного питания в месяц — №1 в России на душу населения. Конкуренты, цены, расчёт окупаемости. Город свободен."
+  schema={{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) }}>
+  <PageHero eyebrow="Город свободен · приоритет №1" title={`Франшиза доставки правильного питания <span class="mark">в Краснодаре</span>`}
+    lead="Краснодар — город №1 в России по спросу на доставку правильного питания на душу населения. Точки Perfect Balance здесь пока нет."
+    crumbs={[{ href: "/goroda/", label: "Города" }, { href: "/goroda/krasnodar/", label: "Краснодар" }]}>
+    <div class="ctas"><a class="btn" href="#zayavka">Забронировать Краснодар</a><a class="btn ghost" href="#calc">Рассчитать доход</a></div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Спрос</span><h2>Краснодарцы уже ищут доставку ПП — <span class="mark">каждый день</span></h2><p class="muted">Яндекс Вордстат, регион «Краснодар», последние 30 дней.</p></div>
+      <div class="grid g4">
+        <div class="stat"><b class="num">{K.total30}</b><span>запросов «доставка правильного питания» в месяц</span></div>
+        <div class="stat"><b class="num">{c.per100}</b><span>запросов на 100 тыс. жителей — первое место среди городов России</span></div>
+        <div class="stat"><b class="num">×2</b><span>спрос на душу выше, чем в Тюмени, одном из сильнейших городов сети</span></div>
+        <div class="stat"><b class="num">~1,15 млн</b><span>жителей</span></div>
+      </div>
+      <div class="grid g2" style="margin-top:44px">
+        <div>
+          <h3 style="margin-bottom:14px">Что ищут в Краснодаре</h3>
+          <div class="table-wrap"><table><thead><tr><th>Запрос</th><th class="r">В месяц</th></tr></thead>
+            <tbody>{K.queries.slice(0, 12).map(([q, v]) => <tr><td>{q}</td><td class="r">{v}</td></tr>)}</tbody></table></div>
+          <p class="muted small">Широкая частотность: число включает запросы с этими словами.</p>
+        </div>
+        <div>
+          <h3 style="margin-bottom:14px">Как меняется спрос</h3>
+          <div class="chart"><svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Динамика запросов в Краснодаре, % от среднего за 2 года">
+            {[50, 100, 150].map((t) => <><line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="#E2E1DE" /><text x={L - 8} y={y(t) + 4} text-anchor="end" font-size="11" fill="#626262">{t}%</text></>)}
+            {[0, 4, 12, 16, 23].map((i) => <text x={x(i)} y={H - 10} text-anchor={i === 0 ? "start" : i === 23 ? "end" : "middle"} font-size="11" fill="#626262">{MONTHS[i]}</text>)}
+            <path d={path(s2)} fill="none" stroke="#9A9A9A" stroke-width="2" stroke-dasharray="5 4" />
+            <path d={path(s1)} fill="none" stroke="#C70D00" stroke-width="2.5" />
+            <circle cx={x(4)} cy={y(s1[4])} r="4" fill="#C70D00" />
+            <text x={x(4) + 8} y={y(s1[4]) - 6} font-size="11" fill="#111">январь — пик</text>
+          </svg></div>
+          <div class="legend"><span><i class="r"></i>доставка правильного питания</span><span><i class="g"></i>франшиза (интерес к покупке)</span></div>
+          <p class="small muted">Пик спроса — январь. За последний год запросов на {Math.abs(yoy)}% меньше, чем за предыдущий, — рынок остывает по всей России, поэтому важно зайти с сильным продуктом и к сезону.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Конкуренты</span><h2>Кто уже работает в Краснодаре</h2><p class="muted">Топ-10 Яндекса по запросу «доставка правильного питания Краснодар», 24.09.2026. Цены — с сайтов сервисов.</p></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Сервис</th><th>Сайт</th><th>Тип</th><th class="r">Цена дневного рациона</th></tr></thead>
+        <tbody>{K.comp.map(([n, h, t, p]) => <tr><td><b>{n}</b></td><td>{h}</td><td>{t}</td><td class="r">{p}</td></tr>)}</tbody>
+      </table></div>
+      <div class="grid g2" style="margin-top:36px">
+        <div class="card">
+          <h3>Сколько раз ищут бренды конкурентов</h3>
+          <div class="bars">{K.brands.map(([b, v]) => <div class="bar"><span>{b}</span><i style={`width:${Math.max(2, ((v as number) / maxB) * 100)}%`} class:list={{ us: b === "Perfect Balance" }}></i><b class="num">{v}</b></div>)}</div>
+          <p class="muted small">Запросов в месяц в Краснодаре. Level Kitchen — главный конкурент по узнаваемости.</p>
+        </div>
+        <div class="card">
+          <h3>Что это значит для партнёра</h3>
+          <ul class="checks">
+            <li>Рынок доказан: 7 федеральных сетей не открылись бы там, где нет денег.</li>
+            <li>Цены конкурентов — 1 350–2 700 ₽ в день. Есть место для сильного продукта в среднем ценовом сегменте.</li>
+            <li>Местных игроков мало — 3 в топ-10. Клиентов у федералов забирают сервисом и разнообразием меню.</li>
+            <li>У Perfect Balance 840 блюд в год с ротацией каждые 2,5 месяца — аргумент для клиентов, которым надоело однообразное меню.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid g2">
+      <div class="t-txt">
+        <span class="eyebrow">Покупатели франшиз</span>
+        <h2>В Краснодаре активно ищут готовый бизнес</h2>
+        <p class="muted">Интерес к франшизам в Краснодаре — {Math.round(c.bidx)}% от среднего по России.</p>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Запрос в Краснодаре</th><th class="r">В месяц</th></tr></thead>
+        <tbody>{K.b2b.map(([q, v]) => <tr><td>{q}</td><td class="r">{v}</td></tr>)}</tbody></table></div>
+    </div>
+  </section>
+
+  <section class="section soft" id="calc">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Доход точки в Краснодаре</h2><p class="muted">Паушальный взнос для Краснодара — 450 000 ₽. Средний чек выставлен по уровню цен сети и ниже конкурентов города. Аренда кухни — ориентир, уточняется под помещение.</p></div>
+      <Calculator city="Краснодар" price={1200} rent={50000} priceNote="Точки сети продают от 997–1 233 ₽ в день, конкуренты в Краснодаре — 1 350–2 700 ₽" compact />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Запуск</span><h2>Как откроем точку в Краснодаре</h2></div>
+      <ol class="steps grid g3">
+        {[["Бронь города", "Созвон, анализ вашего опыта и бюджета, закрепляем Краснодар за вами на время подготовки."],
+          ["Помещение", "Подбираем кухню 40–60 м² с вытяжкой и доступом для курьеров — ближе к центру, чтобы доставлять по всему городу."],
+          ["Договор и обучение", "Договор коммерческой концессии, обучение повара и администратора по техкартам."],
+          ["Сайт krd.perfectbalance.ru", "Запускаем поддомен для клиентов Краснодара с калькулятором рациона и оплатой."],
+          ["Реклама к сезону", "Яндекс Директ и соцсети по кампаниям сети. Старт до января — к пику спроса."],
+          ["Первые клиенты", "Пробные дни, блогеры Краснодара, партнёрства с фитнес-клубами."]].map(([t, d], i) => <li class="card"><span class="n">{i + 1}</span><h3>{t}</h3><p class="muted">{d}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow">Вопросы</span><h2>Вопросы о франшизе в Краснодаре</h2></div>
+      <div class="faq">{faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</div>
+      <div class="head" style="margin-top:56px"><h3>Свободные города рядом</h3></div>
+      <div class="grid g4">{near.map((n) => <a class="card lnk" href={`/goroda/${n.slug}/`}><h3>{n.city}</h3><p class="muted">{n.b2c} запросов ПП-доставки в месяц</p></a>)}</div>
+    </div>
+  </section>
+
+  <LeadForm city="Краснодар" source="city-krasnodar" title="Забронируйте Краснодар, пока город свободен" subtitle="Пришлём экономическую модель точки для Краснодара и расскажем, как проходит отбор. Основатель отвечает лично в течение дня." />
+</Base>
+<style>
+  .ctas{display:flex;flex-wrap:wrap;gap:12px}
+  .small{font-size:13px;margin-top:10px}
+  .chart{border:1px solid var(--line);padding:8px;background:#fff;overflow-x:auto}
+  .chart svg{width:100%;min-width:420px;height:auto;display:block}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin-top:10px}
+  .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px}
+  .legend i.r{background:var(--red)}.legend i.g{background:#9A9A9A}
+  .bars{display:grid;gap:10px}
+  .bar{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px;font-size:14px}
+  .bar i{height:12px;background:var(--ink);display:block}.bar i.us{background:var(--red)}
+  .bar b{text-align:right}
+  .t-txt{display:grid;gap:14px;align-content:center}
+  .steps{list-style:none;padding:0;margin:0}.steps .n{font-size:40px;font-weight:800;color:var(--red);line-height:1}
+  .faq{display:grid;border-top:1px solid var(--line);max-width:880px}
+  .faq details{border-bottom:1px solid var(--line);padding:18px 0}
+  .faq summary{cursor:pointer;font-weight:700;font-size:17px}.faq p{margin-top:10px;color:var(--muted)}
+  .lnk{text-decoration:none}.lnk:hover h3{color:var(--red)}
+</style>

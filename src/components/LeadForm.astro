@@ -1,0 +1,59 @@
+---
+// Форма заявки. Отправка: TODO — подключить Telegram-бот или CRM (endpoint в data-endpoint).
+interface Props { title?: string; subtitle?: string; city?: string; source?: string }
+const { title = "Получите расчёт окупаемости для вашего города", subtitle = "Пришлём экономическую модель точки и свяжемся в течение дня. Основатель лично отвечает на заявки.", city = "", source = "page" } = Astro.props;
+const id = "f" + Math.random().toString(36).slice(2, 7);
+---
+<section class="section dark" id="zayavka">
+  <div class="wrap lead">
+    <div class="txt">
+      <span class="eyebrow">Заявка</span>
+      <h2>{title}</h2>
+      <p class="muted">{subtitle}</p>
+      <ul class="checks">
+        <li>Смета запуска и помесячный план выхода на прибыль</li>
+        <li>Проверим, свободен ли ваш город</li>
+        <li>Без обязательств: франшизу продаём только после отбора</li>
+      </ul>
+    </div>
+    <form class="form" data-endpoint="" data-source={source} novalidate>
+      <label for={id + "n"}>Как к вам обращаться</label>
+      <input id={id + "n"} name="name" autocomplete="name" required placeholder="Имя" />
+      <label for={id + "p"}>Телефон или Telegram</label>
+      <input id={id + "p"} name="contact" required placeholder="+7 900 000-00-00 или @username" />
+      <label for={id + "c"}>Город, где хотите открыться</label>
+      <input id={id + "c"} name="city" value={city} placeholder="Например, Краснодар" />
+      <button class="btn" type="submit">Получить расчёт</button>
+      <p class="ok" hidden>Заявка принята. Мы свяжемся с вами в течение дня.</p>
+      <p class="err" hidden>Заполните имя и контакт, чтобы мы могли прислать расчёт.</p>
+      <small class="muted">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</small>
+    </form>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLFormElement>("form.form").forEach((f) => {
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(f)) as Record<string, string>;
+      const ok = f.querySelector<HTMLElement>(".ok")!, err = f.querySelector<HTMLElement>(".err")!;
+      if (!d.name?.trim() || !d.contact?.trim()) { err.hidden = false; ok.hidden = true; return; }
+      err.hidden = true;
+      const ep = f.dataset.endpoint;
+      try { if (ep) await fetch(ep, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...d, source: f.dataset.source, page: location.pathname }) }); } catch {}
+      (window as any).ym?.(0, "reachGoal", "lead");
+      ok.hidden = false; f.querySelector("button")!.setAttribute("disabled", "");
+    });
+  });
+</script>
+<style>
+  .lead{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+  .txt{display:grid;gap:18px}
+  .form{background:#fff;color:var(--ink);padding:clamp(22px,3vw,36px);display:grid;gap:8px}
+  label{font-size:13px;font-weight:600;margin-top:8px}
+  input{font:500 16px var(--f);padding:14px 14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);width:100%}
+  input:focus{border-color:var(--ink);outline:none}
+  .form .btn{margin-top:14px}
+  .ok{color:var(--ok);font-weight:700}.err{color:var(--red);font-weight:600}
+  small{font-size:12px}
+  @media (max-width:860px){.lead{grid-template-columns:1fr}}
+</style>

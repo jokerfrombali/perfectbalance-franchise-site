@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import hubs from "../../data/hubs.json";
+import articles from "../../data/articles.json";
+---
+<Base title="Блог о бизнесе на доставке правильного питания — Perfect Balance" description="Как открыть доставку ПП, сколько стоит, как считать окупаемость, СанПиН, техкарты, маркетинг. Практические статьи от франшизы Perfect Balance.">
+  <PageHero eyebrow="Блог" title="Бизнес на правильном питании: <span class='mark'>разбираем по шагам</span>" lead="Статьи для тех, кто выбирает франшизу или открывает доставку еды: деньги, документы, кухня, маркетинг." crumbs={[{ href: "/blog/", label: "Блог" }]} />
+  <section class="section">
+    <div class="wrap grid g2">
+      {hubs.map((h) => {
+        const list = articles.filter((a) => a.hub === h.slug);
+        return <div class="card"><h2 class="h"><a href={`/blog/${h.slug}/`}>{h.name}</a></h2><ul>{list.slice(0, 5).map((a) => <li><a href={`/blog/${h.slug}/${a.slug}/`}>{a.title}</a></li>)}</ul><a href={`/blog/${h.slug}/`} class="more">Все {list.length} статей раздела →</a></div>;
+      })}
+    </div>
+  </section>
+</Base>
+<style>.h{font-size:22px}.h a{text-decoration:none}.card ul{margin:0;padding-left:18px;display:grid;gap:8px}.card li a{text-decoration:none}.card li a:hover,.more:hover{color:var(--red)}.more{font-weight:700;text-decoration:none}</style>

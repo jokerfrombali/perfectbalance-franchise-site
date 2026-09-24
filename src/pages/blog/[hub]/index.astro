@@ -1,0 +1,16 @@
+---
+import Base from "../../../layouts/Base.astro";
+import PageHero from "../../../components/PageHero.astro";
+import hubs from "../../../data/hubs.json";
+import articles from "../../../data/articles.json";
+export function getStaticPaths() { return hubs.map((h) => ({ params: { hub: h.slug }, props: { h } })); }
+const { h } = Astro.props as any;
+const list = articles.filter((a) => a.hub === h.slug);
+---
+<Base title={`${h.name} — блог Perfect Balance`} description={`Статьи раздела «${h.name}» для будущих владельцев доставки правильного питания: ${list.slice(0, 3).map((a) => a.mq).join(", ")}.`}>
+  <PageHero eyebrow="Раздел блога" title={h.name} crumbs={[{ href: "/blog/", label: "Блог" }, { href: `/blog/${h.slug}/`, label: h.name }]} />
+  <section class="section"><div class="wrap grid g3">
+    {list.map((a) => <a class="card lnk" href={`/blog/${h.slug}/${a.slug}/`}><h3>{a.title}</h3><p class="muted">{a.h2.slice(0, 3).map((x) => x.h).join(" · ")}</p></a>)}
+  </div></section>
+</Base>
+<style>.lnk{text-decoration:none}.lnk:hover h3{color:var(--red)}</style>
