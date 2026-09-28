@@ -3,7 +3,6 @@
 // Когда текст готов: положить src/content/articles/<id>.md — он заменит заготовку и снимет noindex.
 import Base from "../../../layouts/Base.astro";
 import PageHero from "../../../components/PageHero.astro";
-import Calculator from "../../../components/Calculator.astro";
 import LeadForm from "../../../components/LeadForm.astro";
 import hubs from "../../../data/hubs.json";
 import articles from "../../../data/articles.json";
@@ -31,12 +30,11 @@ const com = COM[a.com] ?? COM["P-FR"];
         )}
       </article>
       <aside class="side">
-        <div class="card"><span class="eyebrow">Посчитайте</span><h3>Сколько вы заработаете на своей точке</h3><a class="btn" href="/kalkulyator/">Открыть калькулятор</a></div>
+        <div class="card"><span class="eyebrow">Франшиза</span><h3>Узнайте условия и смету запуска</h3><a class="btn" href="/stoimost/">Стоимость и смета</a></div>
         <div class="card"><h3>По теме</h3><a href={com[0]}>{com[1]} →</a>{related.map((r) => <a href={`/blog/${r.hub}/${r.slug}/`}>{r.title}</a>)}</div>
       </aside>
     </div>
   </section>
-  <section class="section soft"><div class="wrap"><div class="head"><h2>Проверьте доход на цифрах сети</h2></div><Calculator compact /></div></section>
   <LeadForm source={"blog-" + a.id} />
 </Base>
 <style>

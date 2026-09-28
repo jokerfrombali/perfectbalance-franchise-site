@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PageHero from "../../components/PageHero.astro";
-import Calculator from "../../components/Calculator.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import free from "../../data/cities_free.json";
 import net from "../../data/cities_net.json";
@@ -24,7 +23,7 @@ const desc = isFree
 <Base title={title} description={desc} noindex={!isFree && !c.sub}>
   {isFree ? (
     <PageHero eyebrow={c.tier === "A" ? "Приоритетный город" : "Город второй волны"} title={`Франшиза доставки правильного питания <span class="mark">в ${c.city}</span>`} lead={`Город свободен: точки Perfect Balance здесь пока нет. Проверим спрос вместе и забронируем город за вами.`} crumbs={[{ href: "/goroda/", label: "Города" }, { href: `/goroda/${c.slug}/`, label: c.city }]}>
-      <div class="ctas"><a class="btn" href="#zayavka">Забронировать {c.city}</a><a class="btn ghost" href="#calc">Рассчитать доход</a></div>
+      <div class="ctas"><a class="btn" href="#zayavka">Забронировать {c.city}</a></div>
     </PageHero>
   ) : (
     <PageHero eyebrow="Город сети" title={`Perfect Balance <span class="mark">в ${c.city}</span>`} lead="Здесь уже работает партнёр сети. Ниже — как устроена точка и какие города рядом свободны." crumbs={[{ href: "/goroda/", label: "Города" }, { href: `/goroda/${c.slug}/`, label: c.city }]} />
@@ -58,12 +57,6 @@ const desc = isFree
     </div>
   </section>
 
-  <section class="section soft" id="calc">
-    <div class="wrap">
-      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Доход точки в {c.city}</h2><p class="muted">Город уже выбран. Меняйте желаемый доход и средний чек.</p></div>
-      <Calculator city={c.city} compact />
-    </div>
-  </section>
 
   <section class="section">
     <div class="wrap">

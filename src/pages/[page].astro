@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
-import Calculator from "../components/Calculator.astro";
 import FounderVideo from "../components/FounderVideo.astro";
 import LeadForm from "../components/LeadForm.astro";
 import FaqList from "../components/FaqList.astro";
@@ -24,7 +23,6 @@ const faqSchema = p.blocks.find((b) => b.t === "faq") as any;
         {b.t === "cards" && <><div class="head"><h2>{b.h}</h2></div><div class="grid g3">{b.items.map(([t, d]) => <div class="card"><h3>{t}</h3><p class="muted">{d}</p></div>)}</div></>}
         {b.t === "table" && <><div class="head"><h2>{b.h}</h2></div><div class="table-wrap"><table><thead><tr>{b.head.map((h) => <th>{h}</th>)}</tr></thead><tbody>{b.rows.map((r, j) => <tr class:list={{ us: j === b.us }}>{r.map((c) => <td>{c}</td>)}</tr>)}</tbody></table></div>{b.note && <p class="muted" style="margin-top:14px;font-size:13px">{b.note}</p>}</>}
         {b.t === "budget" && <><div class="head"><h2>Смета запуска</h2><p class="muted">Пример для города около 400 тысяч жителей.</p></div><div class="table-wrap"><table><thead><tr><th>Статья</th><th class="r">Сумма</th></tr></thead><tbody>{BUDGET.map((x) => <tr><td>{x.item}</td><td class="r">{rub(x.sum)}</td></tr>)}</tbody><tfoot><tr class="us"><td>Итого с резервом</td><td class="r">{rub(total)}</td></tr></tfoot></table></div></>}
-        {b.t === "calc" && <><div class="head"><h2>Калькулятор дохода</h2></div><Calculator /></>}
         {b.t === "video" && <div class="vid"><FounderVideo /></div>}
         {b.t === "cases" && <div class="grid g3">{[["Магнитогорск", "413 тыс. жителей"], ["Набережные Челны", "528 тыс. жителей"], ["Омск", "1,1 млн жителей"]].map(([c, pop]) => <div class="card"><h3>{c}</h3><p class="muted">{pop}</p><p>Срок окупаемости, выручка по месяцам и отзыв партнёра — после согласования с партнёром.</p><span class="todo">кейс уточняется</span></div>)}</div>}
         {b.t === "faq" && <FaqList items={b.items} />}

@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import Calculator from "../components/Calculator.astro";
 import FounderVideo from "../components/FounderVideo.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Shorts from "../components/Shorts.astro";
@@ -43,14 +42,14 @@ const faq = [
   ["Сколько времени придётся уделять бизнесу?", "Первые месяцы — полноценная работа: запуск, найм, первые клиенты. Когда точка выходит на стабильную выручку, операционку можно передать администратору и заниматься развитием."],
 ];
 ---
-<Base title="Франшиза доставки правильного питания Perfect Balance — окупаемость 10–14 месяцев" description={`Франшиза доставки ПП-питания по подписке: паушальный взнос от 350 000 ₽, окупаемость 10–14 месяцев, маржинальность 26%. ${FACTS.cities} города сети, работаем с ${FACTS.since} года. Калькулятор дохода.`}>
+<Base title="Франшиза доставки правильного питания Perfect Balance — окупаемость 10–14 месяцев" description={`Франшиза доставки ПП-питания по подписке: паушальный взнос от 350 000 ₽, окупаемость 10–14 месяцев, маржинальность 26%. ${FACTS.cities} города сети, работаем с ${FACTS.since} года.`}>
   <Hero />
 
   <section class="section">
     <div class="wrap">
       <div class="head"><span class="eyebrow">Кому подходит</span><h2>Франшиза для тех, кто устал работать на чужого дядю</h2></div>
       <div class="grid g3">
-        <div class="card"><h3>Хотите доход выше зарплаты</h3><p class="muted">Цель — 200–300 тысяч рублей в месяц со своего дела, а не повышение раз в два года.</p></div>
+        <div class="card"><h3>Хотите работать на себя</h3><p class="muted">Своё дело с понятной моделью вместо работы по найму.</p></div>
         <div class="card"><h3>Не готовы рисковать всем</h3><p class="muted">Вход от ~1,1 млн ₽ со всеми расходами и резервом — в 2–5 раз ниже, чем у франшиз кафе ПП.</p></div>
         <div class="card"><h3>Нет опыта в общепите</h3><p class="muted">Меню, техкарты, скрипты, реклама и CRM уже есть. Ваша задача — управлять, а не изобретать.</p></div>
       </div>
@@ -59,12 +58,6 @@ const faq = [
 
   <Marquee />
 
-  <section class="section soft" id="calc">
-    <div class="wrap">
-      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Сколько клиентов нужно, чтобы зарабатывать <span class="mark">столько, сколько вы хотите</span></h2><p class="muted">Выберите желаемый доход и город — посчитаем выручку, расходы и срок окупаемости на показателях сети.</p></div>
-      <Calculator compact />
-    </div>
-  </section>
 
   <section class="section dark">
     <div class="wrap grid g2 trust">
@@ -120,13 +113,13 @@ const faq = [
     <div class="wrap">
       <div class="head"><span class="eyebrow">Сравнение</span><h2>Perfect Balance и другие франшизы ПП</h2><p class="muted">Данные с открытых сайтов франшиз, сентябрь 2026.</p></div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Франшиза</th><th class="r">Паушальный взнос</th><th class="r">Вложения</th><th>Окупаемость</th><th>Калькулятор</th></tr></thead>
+        <thead><tr><th>Франшиза</th><th class="r">Паушальный взнос</th><th class="r">Вложения</th><th>Окупаемость</th></tr></thead>
         <tbody>
-          <tr class="us"><td>Perfect Balance</td><td class="r">350–450 тыс. ₽</td><td class="r">~1,1 млн ₽ с резервом</td><td>10–14 мес.</td><td>есть</td></tr>
-          <tr><td>WILL FOOD</td><td class="r">500 тыс. ₽</td><td class="r">от 1,5 млн ₽</td><td>~12 мес.</td><td>есть</td></tr>
-          <tr><td>Vdiet</td><td class="r">390–450 тыс. ₽</td><td class="r">0,9–2 млн ₽</td><td>9–12 мес.</td><td>есть</td></tr>
-          <tr><td>IDEAL DAY</td><td class="r">1,5 млн ₽</td><td class="r">от 2,5 млн ₽</td><td>не указано</td><td>нет</td></tr>
-          <tr><td>PRIME</td><td class="r">1,5 млн ₽</td><td class="r">6,25 млн ₽</td><td>12–18 мес.</td><td>нет</td></tr>
+          <tr class="us"><td>Perfect Balance</td><td class="r">350–450 тыс. ₽</td><td class="r">~1,1 млн ₽ с резервом</td><td>10–14 мес.</td></tr>
+          <tr><td>WILL FOOD</td><td class="r">500 тыс. ₽</td><td class="r">от 1,5 млн ₽</td><td>~12 мес.</td></tr>
+          <tr><td>Vdiet</td><td class="r">390–450 тыс. ₽</td><td class="r">0,9–2 млн ₽</td><td>9–12 мес.</td></tr>
+          <tr><td>IDEAL DAY</td><td class="r">1,5 млн ₽</td><td class="r">от 2,5 млн ₽</td><td>не указано</td></tr>
+          <tr><td>PRIME</td><td class="r">1,5 млн ₽</td><td class="r">6,25 млн ₽</td><td>12–18 мес.</td></tr>
         </tbody>
       </table></div>
       <p style="margin-top:22px"><a class="btn ghost" href="/sravnenie-franshiz/">Полное сравнение 9 франшиз</a></p>

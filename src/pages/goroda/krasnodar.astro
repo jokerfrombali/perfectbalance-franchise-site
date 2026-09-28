@@ -2,7 +2,6 @@
 // Эталонная страница города. Все цифры — Яндекс Вордстат (регион «Краснодар»), выдача Яндекса и сайты конкурентов на 24.09.2026.
 import Base from "../../layouts/Base.astro";
 import PageHero from "../../components/PageHero.astro";
-import Calculator from "../../components/Calculator.astro";
 import LeadForm from "../../components/LeadForm.astro";
 import K from "../../data/krasnodar.json";
 import free from "../../data/cities_free.json";
@@ -30,7 +29,7 @@ const faq = [
   <PageHero eyebrow="Город свободен · приоритет №1" title={`Франшиза доставки правильного питания <span class="mark">в Краснодаре</span>`}
     lead="Краснодар — город №1 в России по спросу на доставку правильного питания на душу населения. Точки Perfect Balance здесь пока нет."
     crumbs={[{ href: "/goroda/", label: "Города" }, { href: "/goroda/krasnodar/", label: "Краснодар" }]}>
-    <div class="ctas"><a class="btn" href="#zayavka">Забронировать Краснодар</a><a class="btn ghost" href="#calc">Рассчитать доход</a></div>
+    <div class="ctas"><a class="btn" href="#zayavka">Забронировать Краснодар</a></div>
   </PageHero>
 
   <section class="section">
@@ -104,12 +103,6 @@ const faq = [
     </div>
   </section>
 
-  <section class="section soft" id="calc">
-    <div class="wrap">
-      <div class="head"><span class="eyebrow">Калькулятор</span><h2>Доход точки в Краснодаре</h2><p class="muted">Паушальный взнос для Краснодара — 450 000 ₽. Средний чек выставлен по уровню цен сети и ниже конкурентов города. Аренда кухни — ориентир, уточняется под помещение.</p></div>
-      <Calculator city="Краснодар" price={1200} rent={50000} priceNote="Точки сети продают от 997–1 233 ₽ в день, конкуренты в Краснодаре — 1 350–2 700 ₽" compact />
-    </div>
-  </section>
 
   <section class="section">
     <div class="wrap">

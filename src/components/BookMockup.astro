@@ -1,20 +1,14 @@
 ---
-// Макет лид-магнита «Экономическая модель точки» в виде раскрытой книги. Цифры — пример на показателях сети
-// (чек 750 ₽, продукты 35%, упаковка 60 ₽, курьер 150 ₽ на 2 дня, постоянные 210 000 ₽, выход на 44 клиента за 8 мес.).
+// Макет лид-магнита в виде раскрытой книги. Только факты с сайта сети (смета запуска), без расчётов дохода и окупаемости.
 import { BUDGET } from "../data/facts";
 const total = BUDGET.reduce((s, b) => s + b.sum, 0);
 const k = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
-const perClient = 30 * (750 * 0.65 - 60 - 75), fixed = 210000;
-const months = Array.from({ length: 12 }, (_, i) => { const c = Math.round(44 * Math.min(1, (i + 1) / 8)); return { m: i + 1, c, p: c * perClient - fixed }; });
-const maxC = 44, maxP = Math.max(...months.map((x) => x.p)), minP = Math.min(...months.map((x) => x.p));
-const firstPos = months.find((x) => x.p > 0)?.m ?? 12;
-const cost = [["Продукты", 263], ["Упаковка", 60], ["Доставка", 75], ["Маржа", 352]] as const;
 ---
 <div class="book-wrap" data-book>
   <div class="tabs" role="tablist" aria-label="Разделы модели">
     <button type="button" role="tab" aria-selected="true" data-go="0">Обложка</button>
-    <button type="button" role="tab" aria-selected="false" data-go="1">Смета и выручка</button>
-    <button type="button" role="tab" aria-selected="false" data-go="2">Себестоимость и стратегия</button>
+    <button type="button" role="tab" aria-selected="false" data-go="1">Смета и что входит</button>
+    <button type="button" role="tab" aria-selected="false" data-go="2">План запуска</button>
   </div>
   <div class="book" aria-label="Пример экономической модели точки Perfect Balance">
     <div class="spine" aria-hidden="true"></div>
@@ -22,15 +16,15 @@ const cost = [["Продукты", 263], ["Упаковка", 60], ["Доста�
     <div class="spread on">
       <div class="pg l cover">
         <img src="/img/logo.svg" alt="" width="104" height="35" />
-        <div class="c-mid"><span class="c-k">Франшиза · 2026</span><h4>Экономическая модель точки</h4><p>Доставка правильного питания по подписке</p></div>
+        <div class="c-mid"><span class="c-k">Франшиза · 2026</span><h4>Запуск точки Perfect Balance</h4><p>Доставка правильного питания по подписке</p></div>
         <div class="c-bar"><span>Город 150–700 тыс. жителей</span><b>Vol. 01</b></div>
       </div>
       <div class="pg r">
         <span class="pk">Содержание</span>
         <ol class="toc">
-          {["Смета запуска", "Клиенты и выручка по месяцам", "Себестоимость рациона", "Точка безубыточности", "Стратегия первых 90 дней", "Срок окупаемости"].map((t, i) => <li><span>{t}</span><i></i><b>{String(i * 4 + 3).padStart(2, "0")}</b></li>)}
+          {["Смета запуска", "Что входит во франшизу", "Помещение и оборудование", "Команда и обучение", "Стратегия первых 90 дней", "Поддержка сети"].map((t, i) => <li><span>{t}</span><i></i><b>{String(i * 4 + 3).padStart(2, "0")}</b></li>)}
         </ol>
-        <div class="stamp">11 мес.<small>окупаемость в примере</small></div>
+        <div class="stamp">с 2018<small>24 города сети</small></div>
       </div>
     </div>
 
@@ -40,22 +34,15 @@ const cost = [["Продукты", 263], ["Упаковка", 60], ["Доста�
         <table>{BUDGET.map((b) => <tr><td>{b.item}</td><td>{k(b.sum)}</td></tr>)}<tr class="tot"><td>Итого</td><td>{k(total)} ₽</td></tr></table>
       </div>
       <div class="pg r">
-        <span class="pk">02 · Клиенты и прибыль, мес. 1–12</span>
-        <div class="bars">{months.map((x) => <div class="col"><i class="cl" style={`height:${(x.c / maxC) * 100}%`}></i><span>{x.m}</span></div>)}</div>
-        <div class="legend"><span><i class="cl"></i>клиентов в день</span><span>выход на 44 клиента к 8-му месяцу</span></div>
-        <div class="pline">
-          {months.map((x) => <div class:list={["pb", { neg: x.p < 0 }]} style={`height:${(Math.abs(x.p) / Math.max(maxP, -minP)) * 100}%`}></div>)}
-        </div>
-        <div class="legend"><span><i class="pr"></i>прибыль в месяц</span><span>в плюсе с {firstPos}-го месяца</span></div>
+        <span class="pk">02 · Что входит во франшизу</span>
+        <ul class="inc">{["Меню на 840 блюд с ТТК и КБЖУ", "Сайт города и CRM", "Приложение учёта", "Реклама от подрядчиков сети", "39 файлов базы знаний", "Подбор помещения и проект кухни", "Обучение и поддержка"].map((t) => <li>{t}</li>)}</ul>
       </div>
     </div>
 
     <div class="spread">
       <div class="pg l">
-        <span class="pk">03 · Из чего состоит чек 750 ₽ за день</span>
-        <div class="stack">{cost.map(([n, v]) => <div class:list={["seg", { m: n === "Маржа" }]} style={`flex:${v}`}><b>{v} ₽</b><span>{n}</span></div>)}</div>
-        <span class="pk" style="margin-top:14px">04 · Точка безубыточности</span>
-        <div class="be"><b>20</b><span>клиентов в день покрывают все постоянные расходы — 210 000 ₽ в месяц</span></div>
+        <span class="pk">03 · Этапы запуска</span>
+        <ol class="steps">{["Анализ города", "Договор", "Помещение и кухня", "Команда и обучение", "Запуск продаж"].map((t) => <li>{t}</li>)}</ol>
       </div>
       <div class="pg r">
         <span class="pk">05 · Стратегия первых 90 дней</span>
@@ -64,13 +51,13 @@ const cost = [["Продукты", 263], ["Упаковка", 60], ["Доста�
           <li><b>Дни 31–60</b><span>Яндекс Директ, партнёрства с фитнес-клубами</span></li>
           <li><b>Дни 61–90</b><span>Удержание, продление подписок, корпоративные заказы</span></li>
         </ul>
-        <div class="stamp red">06 · 11 мес.<small>срок окупаемости</small></div>
+        <div class="stamp red">Поддержка<small>на каждом этапе</small></div>
       </div>
     </div>
 
     <div class="flip" aria-hidden="true"></div>
   </div>
-  <p class="note">Пример на показателях сети. Модель для вашего города — после заявки.</p>
+  <p class="note">Пример материалов. Смета и план для вашего города — после заявки.</p>
 </div>
 <script>
   document.querySelectorAll<HTMLElement>("[data-book]").forEach((w) => {
@@ -160,6 +147,8 @@ const cost = [["Продукты", 263], ["Упаковка", 60], ["Доста�
   .flip.back{left:0;transform-origin:right center;animation:turnb .8s cubic-bezier(.4,.1,.3,1)}
   @keyframes turn{0%{opacity:1;transform:rotateY(0)}50%{box-shadow:-30px 0 40px rgba(0,0,0,.25)}100%{opacity:1;transform:rotateY(-180deg)}}
   @keyframes turnb{0%{opacity:1;transform:rotateY(0)}100%{opacity:1;transform:rotateY(180deg)}}
+  .inc{margin:0;padding:0;list-style:none;display:grid;gap:.6em}.inc li{padding-left:1.2em;position:relative}.inc li::before{content:"";position:absolute;left:0;top:.45em;width:.55em;height:.55em;background:var(--red)}
+  .steps{margin:0;padding-left:1.4em;display:grid;gap:.8em;font-weight:600}.steps li::marker{color:var(--red);font-weight:800}
   .note{font-size:12px;color:#8f8f8f}
   @media (max-width:560px){.book{transform:none}.pg{font-size:8.5px;padding:5%}}
   @media (prefers-reduced-motion:reduce){.book,.book-wrap:hover .book{transform:none;transition:none}}

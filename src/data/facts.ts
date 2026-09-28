@@ -31,7 +31,6 @@ export const BUDGET = [
 export const NAV = [
   { href: "/franshiza/", label: "Франшиза" },
   { href: "/stoimost/", label: "Стоимость" },
-  { href: "/kalkulyator/", label: "Калькулятор" },
   { href: "/keysy/", label: "Кейсы" },
   { href: "/goroda/", label: "Города" },
   { href: "/osnovatel/", label: "Основатель" },

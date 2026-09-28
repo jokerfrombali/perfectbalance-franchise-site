@@ -1,6 +1,5 @@
 ---
-// Первый экран главной: текст + коллаж из фото + мини-калькулятор «сколько клиентов нужно».
-// Формула мини-калькулятора совпадает с основным калькулятором при значениях по умолчанию (чек 750 ₽, продукты 35%, упаковка 60 ₽, курьер 150 ₽ на 2 дня, постоянные 210 000 ₽).
+// Первый экран главной: текст + коллаж из фото + полоса фактов сети.
 import { FACTS } from "../data/facts";
 const years = new Date().getFullYear() - FACTS.since;
 ---
@@ -15,10 +14,9 @@ const years = new Date().getFullYear() - FACTS.since;
         <i></i>
         <div class="pb-side"><b class="num">от 350 тыс. ₽</b><span>паушальный взнос</span></div>
       </div>
-      <p class="lead">Работайте на себя и зарабатывайте от 200 000 ₽ в месяц — по системе, которая уже работает в 24 городах.</p>
+      <p class="lead">Работайте на себя по системе, которая уже работает в 24 городах.</p>
       <div class="ctas">
         <a class="btn" href="#zayavka">Получить расчёт окупаемости</a>
-        <a class="txtlink" href="#calc">или посчитать самому ↓</a>
       </div>
     </div>
 
@@ -28,16 +26,6 @@ const years = new Date().getFullYear() - FACTS.since;
       <div class="tag t1"><b>26%</b><span>маржинальность сети</span></div>
       <div class="tag t2"><b>840</b><span>блюд в меню за год</span></div>
 
-      <form class="mini" data-mini aria-label="Быстрый расчёт">
-        <span class="mini-k">Быстрый расчёт</span>
-        <label for="mini-goal">Хочу зарабатывать в месяц</label>
-        <output class="mini-goal num" data-o="goal">250 000 ₽</output>
-        <input id="mini-goal" type="range" min="100000" max="500000" step="10000" value="250000" />
-        <div class="mini-res">
-          <div><b class="num" data-o="cl">44</b><span>клиента в день</span></div>
-          <div><b class="num" data-o="pb">11</b><span>мес. окупаемость</span></div>
-        </div>
-      </form>
     </div>
   </div>
 
@@ -71,18 +59,6 @@ const years = new Date().getFullYear() - FACTS.since;
   </div>
 </section>
 <script>
-  const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n) + " ₽";
-  document.querySelectorAll<HTMLFormElement>("[data-mini]").forEach((f) => {
-    const r = f.querySelector("input")!, o = (k: string) => f.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
-    const perClient = 30 * (750 * (1 - 0.35) - 60 - 75), fixed = 210000, inv = 350000 + 150000 + 200000 + 27000 + 30000 + 150000 + 200000;
-    const calc = () => {
-      const goal = Number(r.value), cl = Math.ceil((goal + fixed) / perClient);
-      let cum = -inv, m = 0; while (cum < 0 && m < 60) { m++; cum += cl * Math.min(1, m / 8) * perClient - fixed; }
-      o("goal").textContent = fmt(goal); o("cl").textContent = String(cl); o("pb").textContent = String(m);
-      r.style.setProperty("--p", ((goal - 100000) / 400000) * 100 + "%");
-    };
-    r.addEventListener("input", calc); f.addEventListener("submit", (e) => e.preventDefault()); calc();
-  });
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.querySelectorAll<HTMLElement>(".hero [data-count]").forEach((el) => {
       const to = Number(el.dataset.count), t0 = performance.now();
